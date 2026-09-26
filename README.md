@@ -5,7 +5,7 @@
 PedalBridge verbindet ein Bodytone SMB1 V3 Spinning-Bike über einen ESP32 mit einer Garmin-Uhr und einem optionalen Android-Display. Das Smartphone ist zum Aufzeichnen eines Trainings nicht erforderlich.
 
 - **PedalBridge 0.14.1**: ESP32-Firmware unter [`firmware/`](firmware).
-- **PedalBridge Display 0.9.1**: Android-App unter [`android/`](android).
+- **PedalBridge Display 0.9.2**: Android-App unter [`android/`](android).
 
 ```text
 Bike -- BLE FTMS --> ESP32 -- BLE CPS/CSC --> Garmin

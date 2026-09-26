@@ -588,7 +588,7 @@ public final class MainActivity extends Activity {
         LinearLayout memory=settingsGroup(settings,"Speicher & Sicherung");storageInfo=historyText("Speicher wird nach dem Verbinden geladen.",13);memory.addView(storageInfo);importInfo=historyText("",12);memory.addView(importInfo);
         action(memory,"Archiv als ZIP sichern",()->startActivityForResult(new Intent(Intent.ACTION_CREATE_DOCUMENT).setType("application/zip").addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE,"PedalBridge-Archiv.zip"),81));
         action(memory,"Trainingsdatei importieren",()->startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*"),82));
-        settings.addView(historyText("PedalBridge Display · Version 0.9.1",12));
+        settings.addView(historyText("PedalBridge Display · Version 0.9.2",12));
         updateSettingsAvailability();
     }
     private void setupTabs() {

@@ -1,8 +1,14 @@
 # Änderungen
 
+## App 0.9.2
+
+- Oberen Verbindungspfeil im App-Icon verlängert und Abstände zum Pedal angeglichen.
+- Gleichmäßiger Kreisradius, Strichstärke und Pfeilspitzen.
+- Firmware bleibt bei 0.14.1.
+
 ## App 0.9.1 / Bridge 0.14.1
 
-- Gemeinsames Branding PedalBridge und PedalBridge.
+- Gemeinsames Branding PedalBridge und PedalBridge Display.
 - Adaptives Android-Icon und monochrome Variante für thematische Icons.
 - Neue BLE-Namen; Android erkennt auch die bisherigen Namen.
 - Paketkennung, Datenbank, Archivformat und UUIDs bleiben kompatibel.
