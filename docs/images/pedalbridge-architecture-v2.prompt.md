@@ -1,0 +1,16 @@
+# Hardware-specific architecture illustration
+
+Edited using the built-in image generation tool. The original schematic is the edit target; product photos are visual references only. Phone screens remain conceptual illustrations.
+
+## References
+
+- Bodytone SMB1 V3: https://bodytone.eu/en/products/bicicleta-smart-bike-v3
+- Bodytone reference image: https://bodytone.eu/cdn/shop/files/SMB1v3_01.png?v=1757415037&width=1500
+- ESP32 D1 Mini CP2104 USB-C reference: https://www.vngsystems.nl/D1-Mini-ESP32-Wifi-Bluetooth-USB-C
+- Board reference image: https://www.vngsystems.nl/image/cache/catalog/Producten/Arduino/D1Mini/D1MiniEsp32USBC/D1-mini-esp32-cp2104-USBC-1-500x500.jpg
+
+The board illustration is based on the model description supplied by the owner, not a photo of the individual board. Seller PCB revisions can differ.
+
+## Edit prompt
+
+Edit image 1, the existing PedalBridge architecture schematic. Images 2 and 3 are HARDWARE REFERENCE IMAGES ONLY, not extra nodes to add. Keep image 1's whole composition, title, subtitle, background, colors, fonts, English labels, watch, smartphone, exact arrow directions and connections, and footnote unchanged. Change ONLY the illustrated bike and the ESP32 board to accurately reflect the references, while preserving readability and the dark infographic style. Reference image 2 is the official Bodytone SMB1 V3: black enclosed body with a LARGE REAR flywheel under/behind the saddle on the LEFT, silver flywheel edge visible inside the black circular enclosure, crank/pedal towards the RIGHT with a bright narrow rainbow ring around the crank, black low base, silver vertically adjustable saddle and handlebar posts, front console LCD mounted between its distinctive black triathlon/drop-like multi-grip handlebars at the upper RIGHT. Preserve actual silhouette and layout, especially rear flywheel vs front handlebars. It must be recognizably this specific SMB1 V3 model, not a generic bike with a front flywheel. Fit it in the existing left-node footprint without covering the labels or arrows. Keep node label 'FTMS indoor bike'; the existing tested footer already names Bodytone SMB1 V3. Reference image 3 is the user's ESP32 D1 Mini CP2104 Type-C board style: a relatively wide blue PCB, black PCB radio antenna strip at the top, large ESP-WROOM-32 rectangular silver shield in the center, TWO parallel vertical through-hole/header pad rows along EACH side, CP2104 square chip low on the board, a prominent wide symmetric USB TYPE-C receptacle at the BOTTOM center, small reset button bottom left. The actual board is approximately 39x31 mm. Render just the board, omit all loose header strips and the white product-photo background. Do not substitute narrow ESP8266 D1 Mini, generic ESP32 DevKit, C3 board, or micro-USB. Keep the central node title 'PedalBridge'. Replace its sublabel 'ESP32 bridge' with 'ESP32 D1 Mini · CP2104 · USB-C', arranged as two neat small lines if needed, without moving 'Records without a phone' or its arrows. Keep the turquoise bike->ESP arrow, blue ESP->Garmin arrow, bidirectional ESP<->phone arrow, and dashed watch->phone heart-rate arrow exactly as before. Match existing rendering/lighting so both replacement devices integrate naturally. All other labels unchanged and readable. No extra devices, no new logos or decorative embellishments.
