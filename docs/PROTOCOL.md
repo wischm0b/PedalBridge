@@ -1,30 +1,32 @@
-# Bluetooth-Protokoll
+# Bluetooth protocol
 
-Die Bridge arbeitet als BLE-Client zum Bike und BLE-Server für Garmin und Android. Standarddienste: FTMS `1826`, Cycling Power `1818` und Cycling Speed and Cadence `1816`. Garmin kann je nach Gerät nur einen Teil davon nutzen.
+The bridge is a BLE client to the bike and a BLE server for Garmin and Android. Standard services are FTMS `1826`, Cycling Power `1818`, and Cycling Speed and Cadence `1816`. Garmin may use only a subset.
 
-GAP-Name: `PedalBridge`. Die kompakte Legacy-Werbung verwendet `PedalBridge`, damit die Dienste in das 31-Byte-Limit passen. Der Bike-Suchfilter `SMB1` bleibt erhalten.
+The GAP and legacy advertising name is **PedalBridge**. The compact advertising payload fits within 31 bytes. The bike name filter remains `SMB1`.
 
-Privater App-Dienst: `9f6c1000-5a7b-4fd0-9a9f-6c30a7e63110`.
+Private companion service: `9f6c1000-5a7b-4fd0-9a9f-6c30a7e63110`.
 
-| Kennung | Funktion |
+| Characteristic | Purpose |
 | --- | --- |
-| `...1001...` | Live-Messwerte, Notify |
-| `...1002...` | Steuerkommandos |
-| `...1003...` | Archivtransfer |
-| `...1004...` | Speicher und Konfiguration, Read |
+| `...1001...` | Live measurements, Notify |
+| `...1002...` | Control commands |
+| `...1003...` | Archive transfer |
+| `...1004...` | Storage and configuration, Read |
 
-Live-Version 3: 20 Byte, Little Endian. Version 2 enthält die ersten 18 Byte.
+Live packet version 3 is 20 bytes, little-endian. Version 2 includes the first 18 bytes.
 
-| Offset | Typ | Inhalt |
+| Offset | Type | Content |
 | --- | --- | --- |
-| 0 | uint8 | Protokollversion |
-| 1 | uint8 | Statusflags |
-| 2 | int16 | Watt |
-| 4 | uint16 | Kadenz × 10 |
-| 6 | uint16 | Geschwindigkeit km/h × 100 |
-| 8 | uint32 | Distanz km × 100000 |
-| 12 | uint32 | Sekunden |
-| 16 | uint16 | Kalorien × 10 |
-| 18 | int16 | Widerstandsstufe, sofern gültig |
+| 0 | uint8 | Protocol version |
+| 1 | uint8 | Status flags |
+| 2 | int16 | Power, W |
+| 4 | uint16 | Cadence × 10 |
+| 6 | uint16 | Speed, km/h × 100 |
+| 8 | uint32 | Distance, km × 100000 |
+| 12 | uint32 | Elapsed seconds |
+| 16 | uint16 | Calories × 10 |
+| 18 | int16 | Resistance level, when valid |
 
-Die übrigen Kommandos sind in `firmware/src/main.cpp` und der Gegenstelle `android/app/src/main/java/de/smb1display/MainActivity.java` definiert. Live-Puls empfängt Android separat über den Standarddienst Heart Rate `180D` der Uhr.
+Other commands are defined in `firmware/src/main.cpp` and `android/app/src/main/java/de/smb1display/MainActivity.java`. Android receives live heart rate directly from the watch's standard Heart Rate service `180D`.
+
+UI language preferences do not change UUIDs, numeric BLE packets, imported file formats or archive identities. The ESP web language is stored in Preferences under `language`; `/language` accepts only `en` and `de` and does not restart BLE.

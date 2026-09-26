@@ -11,7 +11,7 @@ import org.robolectric.util.ReflectionHelpers;
 import static org.junit.Assert.*;
 @RunWith(RobolectricTestRunner.class) @Config(sdk=35,qualifiers="w412dp-h892dp-port-xxhdpi")
 public class TabSwipeTest {
- @Before public void reset(){RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().clear().commit();}
+ @Before public void reset(){RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().clear().commit();RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().putString("language","de").commit();I18n.init(RuntimeEnvironment.getApplication());}
  private void tab(MainActivity a,int i){ReflectionHelpers.callInstanceMethod(a,"selectTab",ReflectionHelpers.ClassParameter.from(int.class,i));layout(a);}
  private void layout(MainActivity a){View root=a.getWindow().getDecorView();root.measure(View.MeasureSpec.makeMeasureSpec(1236,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(2676,View.MeasureSpec.EXACTLY));root.layout(0,0,1236,2676);}
  private void send(MainActivity a,int action,float x,float y,long time){MotionEvent e=MotionEvent.obtain(1,time,action,x,y,0);a.dispatchTouchEvent(e);e.recycle();}

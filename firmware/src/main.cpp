@@ -17,6 +17,7 @@ extern "C" {
 
 #include "config.h"
 #include "training_archive.h"
+#include "web_language.h"
 #if defined(HISTORY_SELF_TEST) || defined(SESSION_SELF_TEST)
 #include "history_selftest.h"
 #endif
@@ -312,7 +313,7 @@ String buildConfigPage() {
 
   String page;
   page.reserve(15000);
-  page += F("<!doctype html><html lang='de'><head><meta charset='utf-8'>"
+  page += webText(F("<!doctype html><html lang='de'><head><meta charset='utf-8'>"
             "<meta name='viewport' content='width=device-width,initial-scale=1'>"
             "<title>PedalBridge</title><style>"
             ":root{--ink:#090909;--soft:#f1f1ef;--line:#d8d8d4;--ok:#168348;--bad:#b32929}"
@@ -326,7 +327,7 @@ String buildConfigPage() {
             "th{font-size:11px;text-transform:uppercase;letter-spacing:.08em}.muted{color:#666}.yes{font-weight:700}button{border:0;background:#000;color:#fff;padding:11px 15px;font-weight:700;cursor:pointer}"
             "button.secondary{background:#fff;color:#000;border:1px solid #000}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.note{background:var(--soft);padding:15px;margin:18px 0;font-size:14px;line-height:1.5}"
             "@media(max-width:720px){.grid{grid-template-columns:1fr 1fr}.brand{letter-spacing:-4px}th:nth-child(2),td:nth-child(2){display:none}}"
-            "</style></head><body><main class='wrap'><div class='brand'>PedalBridge<b>Bridge</b></div>"
+            "</style></head><body><main class='wrap'><div class='brand'>Pedal<b>Bridge</b></div>"
             "<div class='eyebrow'>Live-Training</div><h2>Aktuelle Messwerte</h2>"
             "<div class='grid'><div class='metric'><span>Leistung</span><strong id='power'>–</strong></div>"
             "<div class='metric'><span>Trittfrequenz</span><strong id='cadence'>–</strong></div>"
@@ -338,21 +339,21 @@ String buildConfigPage() {
             "<div class='note' id='detail'>Diagnose wird geladen …</div>"
             "<section class='panel'><div class='eyebrow'>Bluetooth-Geräte</div><h2>Bike auswählen</h2>"
             "<p class='muted'>Bike einschalten und treten. Die Liste wird beim Neuladen aktualisiert. FTMS und ein Signal über −85 dBm sind ideal.</p>"
-            "<table><thead><tr><th>Gerät</th><th>Adresse</th><th>Signal</th><th>FTMS</th><th></th></tr></thead><tbody>");
+            "<table><thead><tr><th>Gerät</th><th>Adresse</th><th>Signal</th><th>FTMS</th><th></th></tr></thead><tbody>"),F("<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PedalBridge</title><style>:root{--ink:#090909;--soft:#f1f1ef;--line:#d8d8d4;--ok:#168348;--bad:#b32929}*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:Arial,Helvetica,sans-serif}.wrap{max-width:980px;margin:auto;padding:30px 20px 60px}.brand{font-size:clamp(48px,12vw,108px);font-weight:200;letter-spacing:-7px;line-height:.9;margin:4px 0 38px}.brand b{font-weight:900;font-style:italic}.eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:11px;font-weight:700}h2{font-size:25px;margin:8px 0 18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:16px 0 28px}.metric{background:#fff;padding:20px;min-height:112px}.metric span{display:block;color:#666;font-size:12px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em}.metric strong{font-size:clamp(25px,5vw,42px);font-variant-numeric:tabular-nums}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#999;margin-right:8px}.dot.ok{background:var(--ok)}.dot.bad{background:var(--bad)}.panel{border-top:3px solid #000;padding-top:16px;margin-top:30px}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 8px;border-bottom:1px solid var(--line);font-size:14px}th{font-size:11px;text-transform:uppercase;letter-spacing:.08em}.muted{color:#666}.yes{font-weight:700}button{border:0;background:#000;color:#fff;padding:11px 15px;font-weight:700;cursor:pointer}button.secondary{background:#fff;color:#000;border:1px solid #000}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.note{background:var(--soft);padding:15px;margin:18px 0;font-size:14px;line-height:1.5}@media(max-width:720px){.grid{grid-template-columns:1fr 1fr}.brand{letter-spacing:-4px}th:nth-child(2),td:nth-child(2){display:none}}</style></head><body><main class='wrap'><div class='brand'>Pedal<b>Bridge</b></div><div class='eyebrow'>Live workout</div><h2>Current metrics</h2><div class='grid'><div class='metric'><span>Power</span><strong id='power'>–</strong></div><div class='metric'><span>Cadence</span><strong id='cadence'>–</strong></div><div class='metric'><span>Speed</span><strong id='speed'>–</strong></div><div class='metric'><span>Distance</span><strong id='distance'>–</strong></div><div class='metric'><span>Time</span><strong id='duration'>–</strong></div><div class='metric'><span>Calories</span><strong id='calories'>–</strong></div><div class='metric'><span>Connections</span><strong id='links' style='font-size:17px'>–</strong></div></div><div class='note' id='detail'>Loading diagnostics …</div><section class='panel'><div class='eyebrow'>Bluetooth devices</div><h2>Select bike</h2><p class='muted'>Turn on the bike and start pedaling. Reload to refresh the list. FTMS and a signal above −85 dBm are ideal.</p><table><thead><tr><th>Device</th><th>Address</th><th>Signal</th><th>FTMS</th><th></th></tr></thead><tbody>"));
 
   if (count == 0) {
-    page += F("<tr><td colspan='5'>Noch keine Bluetooth-Geräte gefunden.</td></tr>");
+    page += webText(F("<tr><td colspan='5'>Noch keine Bluetooth-Geräte gefunden.</td></tr>"),F("<tr><td colspan='5'>No Bluetooth devices found yet.</td></tr>"));
   }
   for (size_t i = 0; i < count; ++i) {
     const ScanEntry& entry = entries[i];
     page += F("<tr><td>");
-    page += entry.name[0] ? htmlEscape(entry.name) : String(F("(ohne Namen)"));
+    page += entry.name[0] ? htmlEscape(entry.name) : String(webText(F("(ohne Namen)"),F("(unnamed)")));
     page += F("</td><td class='muted'>");
     page += entry.address;
     page += F("</td><td>");
     page += String(entry.rssi);
     page += F(" dBm</td><td class='");
-    page += entry.advertisesFtms ? F("yes'>ja") : F("'>nein");
+    page += entry.advertisesFtms ? webText(F("yes'>ja"),F("yes'>yes")) : webText(F("'>nein"),F("'>no"));
     page += F("</td><td><form method='post' action='/save'>"
               "<input type='hidden' name='address' value='");
     page += entry.address;
@@ -360,14 +361,14 @@ String buildConfigPage() {
     page += String(entry.addressType);
     page += F("'><input type='hidden' name='name' value=\"");
     page += htmlEscape(entry.name);
-    page += F("\"><button type='submit'>Auswählen</button></form></td></tr>");
+    page += webText(F("\"><button type='submit'>Auswählen</button></form></td></tr>"),F("\"><button type='submit'>Select</button></form></td></tr>"));
   }
-  page += F("</tbody></table></section><div class='actions'><button class='secondary' onclick='location.reload()'>Geräteliste aktualisieren</button>"
+  page += webText(F("</tbody></table></section><div class='actions'><button class='secondary' onclick='location.reload()'>Geräteliste aktualisieren</button>"
             "<form method='post' action='/session-reset'><button class='secondary' type='submit'>Training zurücksetzen</button></form>"
             "<form method='post' action='/wifi-off'><button type='submit'>WLAN ausschalten &amp; Betrieb starten</button></form></div>"
-            "<p class='muted'>Hotspot: ");
+            "<p class='muted'>Hotspot: "),F("</tbody></table></section><div class='actions'><button class='secondary' onclick='location.reload()'>Refresh device list</button><form method='post' action='/session-reset'><button class='secondary' type='submit'>Reset workout</button></form><form method='post' action='/wifi-off'><button type='submit'>Turn off Wi-Fi &amp; continue riding</button></form></div><p class='muted'>Hotspot: "));
   page += CONFIG_AP_NAME;
-  page += F(" · Seite: 192.168.4.1 · Firmware 0.14.1</p>"
+  page += webText(F(" · Seite: 192.168.4.1 · Firmware 0.15.0</p>"
             "<script>function state(v){return '<i class=\"dot '+(v?'ok':'bad')+'\"></i>'+(v?'verbunden':'nicht verbunden')}"
             "function clock(v){const m=Math.floor(v/60),q=v%60;return String(m).padStart(2,'0')+':'+String(q).padStart(2,'0')}"
             "async function poll(){try{const r=await fetch('/api/status',{cache:'no-store'}),s=await r.json();"
@@ -375,7 +376,17 @@ String buildConfigPage() {
             "links.innerHTML='Bike '+(s.bike?'✓':'–')+' · Garmin '+(s.garmin?'✓':'–')+' · Phone '+(s.phone?'✓':'–')+'<br>P:'+(s.garminSubscribed?'ja':'nein')+' · S:'+(s.speedSubscribed?'ja':'nein')+' · FTMS:'+(s.ftmsSubscribed?'ja':'nein');"
             "detail.textContent='Bike: '+s.configured+' | Signal: '+(s.rssi===-127?'–':s.rssi+' dBm')+' | FTMS-Pakete: '+s.ftmsPackets+' | Garmin Leistung: '+s.garminPackets+' | Garmin Speed: '+s.speedPackets+' | '+s.control;"
             "}catch(e){detail.textContent='Diagnoseverbindung zum ESP32 unterbrochen.'}}poll();setInterval(poll,1000)</script>"
-            "</main></body></html>");
+            "</main></body></html>"),F(" · Page: 192.168.4.1 · Firmware 0.15.0</p><script>function state(v){return '<i class=\"dot '+(v?'ok':'bad')+'\"></i>'+(v?'connected':'disconnected')}function clock(v){const m=Math.floor(v/60),q=v%60;return String(m).padStart(2,'0')+':'+String(q).padStart(2,'0')}async function poll(){try{const r=await fetch('/api/status',{cache:'no-store'}),s=await r.json();power.textContent=s.power+' W';cadence.textContent=s.cadence.toFixed(1)+' rpm';speed.textContent=s.speed.toFixed(1)+' km/h';distance.textContent=s.distance.toFixed(2)+' km';duration.textContent=clock(s.duration);calories.textContent=s.calories.toFixed(0)+' kcal';links.innerHTML='Bike '+(s.bike?'✓':'–')+' · Garmin '+(s.garmin?'✓':'–')+' · Phone '+(s.phone?'✓':'–')+'<br>P:'+(s.garminSubscribed?'yes':'no')+' · S:'+(s.speedSubscribed?'yes':'no')+' · FTMS:'+(s.ftmsSubscribed?'yes':'no');detail.textContent='Bike: '+s.configured+' | Signal: '+(s.rssi===-127?'–':s.rssi+' dBm')+' | FTMS packets: '+s.ftmsPackets+' | Garmin Power: '+s.garminPackets+' | Garmin speed: '+s.speedPackets+' | '+s.control;}catch(e){detail.textContent='Diagnostic connection to the ESP32 interrupted.'}}poll();setInterval(poll,1000)</script></main></body></html>"));
+  String languageForm="<form method='post' action='/language' class='actions'><label for='language'>";
+  languageForm += gWebEnglish ? "Language" : "Sprache";
+  languageForm += "</label><select id='language' name='language' onchange='this.form.submit()'><option value='en'";
+  if(gWebEnglish)languageForm += " selected";
+  languageForm += ">English</option><option value='de'";
+  if(!gWebEnglish)languageForm += " selected";
+  languageForm += ">Deutsch</option></select><noscript><button type='submit'>";
+  languageForm += gWebEnglish ? "Save language" : "Sprache speichern";
+  languageForm += "</button></noscript></form>";
+  page.replace("<main class='wrap'>",String("<main class='wrap'>")+languageForm);
   return page;
 }
 
@@ -412,11 +423,11 @@ String buildStatusJson() {
   json += F(",\"garminPackets\":"); json += String(gGarminNotificationCount);
   json += F(",\"speedPackets\":"); json += String(gGarminSpeedNotificationCount);
   json += F(",\"configured\":\""); json += jsonEscape(gConfiguredName + " [" + gConfiguredAddress + "]");
-  json += F("\",\"lastSeen\":\""); json += lastSeen;
+  json += F("\",\"lastSeen\":\""); json += webStatus(lastSeen);
   json += F("\",\"connectable\":"); json += gLastBikeConnectable ? F("true") : F("false");
   json += F(",\"advType\":"); json += String(gLastBikeAdvType);
-  json += F(",\"error\":\""); json += jsonEscape(gLastBikeError);
-  json += F("\",\"control\":\""); json += jsonEscape(gFtmsControlStatus);
+  json += F(",\"error\":\""); json += jsonEscape(webStatus(gLastBikeError));
+  json += F("\",\"control\":\""); json += jsonEscape(webStatus(gFtmsControlStatus));
   json += F("\"}");
   return json;
 }
@@ -442,12 +453,22 @@ void startConfigPortal() {
     gWebServer.sendHeader("Cache-Control", "no-store");
     gWebServer.send(200, "application/json; charset=utf-8", buildStatusJson());
   });
+  gWebServer.on("/language", HTTP_POST, []() {
+    const String language=gWebServer.arg("language");
+    if(language!="en" && language!="de") {
+      gWebServer.send(400,"text/plain; charset=utf-8",gWebEnglish?"Unsupported language":"Nicht unterstützte Sprache");return;
+    }
+    gPreferences.putString("language",language);
+    gWebEnglish=language=="en";
+    gWebServer.sendHeader("Location","/",true);
+    gWebServer.send(303,"text/plain; charset=utf-8",gWebEnglish?"Language saved":"Sprache gespeichert");
+  });
   gWebServer.on("/save", HTTP_POST, []() {
     const String address = gWebServer.arg("address");
     const String name = gWebServer.arg("name");
     const int addressType = gWebServer.arg("type").toInt();
     if (address.length() != 17) {
-      gWebServer.send(400, "text/plain; charset=utf-8", "Ungültige Bluetooth-Adresse");
+      gWebServer.send(400, "text/plain; charset=utf-8", webStatus("Ungültige Bluetooth-Adresse"));
       return;
     }
     gPreferences.putString("bikeAddress", address);
@@ -464,7 +485,7 @@ void startConfigPortal() {
     gLastBikeError = "Bike gespeichert; Verbindung wird aufgebaut";
     NimBLEDevice::getScan()->stop();
     gWebServer.sendHeader("Location", "/", true);
-    gWebServer.send(303, "text/plain; charset=utf-8", "Gespeichert");
+    gWebServer.send(303, "text/plain; charset=utf-8", webStatus("Gespeichert"));
   });
   gWebServer.on("/session-reset", HTTP_POST, []() {
     gHistory.tracker.finish(2);
@@ -473,15 +494,12 @@ void startConfigPortal() {
     gSessionDistanceKm = 0.0f;
     gSessionCaloriesKcal = 0.0f;
     gWebServer.sendHeader("Location", "/", true);
-    gWebServer.send(303, "text/plain; charset=utf-8", "Training zurückgesetzt");
+    gWebServer.send(303, "text/plain; charset=utf-8", webStatus("Training zurückgesetzt"));
   });
   gWebServer.on("/wifi-off", HTTP_POST, []() {
     gPreferences.putBool("wifiPortal", false);
     gWebServer.send(200, "text/html; charset=utf-8",
-                    "<!doctype html><meta charset='utf-8'><meta name='viewport' content='width=device-width'>"
-                    "<style>body{font-family:Arial;margin:40px;max-width:650px}h1{font-size:42px}</style>"
-                    "<h1>WLAN wird ausgeschaltet</h1><p>Die Bike-Bridge läuft weiter. "
-                    "Mit BOOT oder zweimal RST lässt sich die Diagnose wieder öffnen.</p>");
+                    String(webText(F("<!doctype html><meta charset='utf-8'><meta name='viewport' content='width=device-width'><style>body{font-family:Arial;margin:40px;max-width:650px}h1{font-size:42px}</style><h1>WLAN wird ausgeschaltet</h1><p>Die Bike-Bridge läuft weiter. Mit BOOT oder zweimal RST lässt sich die Diagnose wieder öffnen.</p>"),F("<!doctype html><meta charset='utf-8'><meta name='viewport' content='width=device-width'><style>body{font-family:Arial;margin:40px;max-width:650px}h1{font-size:42px}</style><h1>Turning off Wi-Fi</h1><p>The bike bridge keeps running. Hold BOOT or press RST twice to reopen diagnostics.</p>"))));
     gWifiShutdownPending = true;
     gWifiShutdownRequestedAtMs = millis();
   });
@@ -1188,7 +1206,7 @@ void createGarminPowerSensor() {
   deviceInfo->createCharacteristic(kModelNumberUuid, NIMBLE_PROPERTY::READ)
       ->setValue("PedalBridge-FTMS-CPS-Bridge");
   deviceInfo->createCharacteristic(kFirmwareRevisionUuid, NIMBLE_PROPERTY::READ)
-      ->setValue("0.14.1");
+      ->setValue("0.15.0");
   deviceInfo->start();
 
   NimBLEAdvertising* advertising = NimBLEDevice::getAdvertising();
@@ -1466,7 +1484,7 @@ void setup() {
   Serial.begin(115200);
   delay(500);
   Serial.println();
-  Serial.println("PedalBridge FTMS -> Garmin Cycling Power Bridge 0.14.1");
+  Serial.println("PedalBridge FTMS -> Garmin Cycling Power Bridge 0.15.0");
 #if defined(HISTORY_SELF_TEST) || defined(SESSION_SELF_TEST)
   Serial.println(historySelfTest() ? "HISTORY SELF TEST PASS" : "HISTORY SELF TEST FAIL");
 #endif
@@ -1483,6 +1501,7 @@ void setup() {
   }
 #endif
   gPreferences.begin("smb1bridge", false);
+  gWebEnglish = gPreferences.getString("language", "en") != "de";
   gHistory.begin(gPreferences);
   if(gHistory.ready) {
     File imported=LittleFS.open("/mybodytone.json","r"); uint8_t block[512]; uint32_t hash=2166136261U;

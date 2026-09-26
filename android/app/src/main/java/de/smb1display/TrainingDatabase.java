@@ -37,15 +37,15 @@ final class TrainingDatabase extends SQLiteOpenHelper {
     int importBodytone(byte[] bytes) throws JSONException {
         JSONObject document=new JSONObject(new String(bytes,StandardCharsets.UTF_8));
         if(!"smb1-training-import".equals(document.optString("format")) || document.optInt("schema_version")!=1)
-            throw new JSONException("Keine unterstützte MyBodytone-Importdatei");
+            throw new JSONException(I18n.t(R.string.ui_unsupported_mybodytone_import_file_376));
         JSONArray rows=document.getJSONArray("sessions");
-        if(rows.length()>10000) throw new JSONException("Zu viele Sitzungen");
+        if(rows.length()>10000) throw new JSONException(I18n.t(R.string.ui_too_many_sessions_377));
         java.util.HashSet<String> keys=new java.util.HashSet<>();
         for(int i=0;i<rows.length();i++) {
             JSONObject row=rows.getJSONObject(i);String key=row.getString("import_key");
-            if(!key.equals("mybodytone:"+row.getString("source_session_id")) || !keys.add(key)) throw new JSONException("Ungültige oder doppelte Importkennung");
+            if(!key.equals("mybodytone:"+row.getString("source_session_id")) || !keys.add(key)) throw new JSONException(I18n.t(R.string.ui_invalid_or_duplicate_import_id_381));
             for(String field:new String[]{"duration_seconds","distance_km","calories_kcal"})
-                if(!row.isNull(field) && (!Double.isFinite(row.getDouble(field)) || row.getDouble(field)<0)) throw new JSONException("Ungültiger Wert: "+field);
+                if(!row.isNull(field) && (!Double.isFinite(row.getDouble(field)) || row.getDouble(field)<0)) throw new JSONException(I18n.t(R.string.ui_invalid_value_382)+field);
         }
         SQLiteDatabase db=getWritableDatabase();db.beginTransaction();int added=0;
         try {
@@ -54,10 +54,10 @@ final class TrainingDatabase extends SQLiteOpenHelper {
                 try(Cursor c=db.rawQuery("SELECT json FROM imports WHERE key=?",new String[]{row.getString("import_key")})) {
                     if(c.moveToFirst()) continue; // Stable source ID: reimport never duplicates a ride.
                 }
-                if(db.insertOrThrow("imports",null,values)<0) throw new IllegalStateException("Import fehlgeschlagen");added++;
+                if(db.insertOrThrow("imports",null,values)<0) throw new IllegalStateException(I18n.t(R.string.ui_import_failed_387));added++;
             }
             ContentValues doc=new ContentValues();doc.put("checksum",checksum(bytes));doc.put("json",document.toString());
-            if(db.insertWithOnConflict("import_documents",null,doc,SQLiteDatabase.CONFLICT_REPLACE)<0) throw new IllegalStateException("Importdatei nicht gesichert");
+            if(db.insertWithOnConflict("import_documents",null,doc,SQLiteDatabase.CONFLICT_REPLACE)<0) throw new IllegalStateException(I18n.t(R.string.ui_import_file_not_backed_up_390));
             db.setTransactionSuccessful();
         } finally {db.endTransaction();}
         return added;

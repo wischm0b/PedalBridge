@@ -1,8 +1,8 @@
-# Einrichtung und Builds
+# Setup and builds
 
 ## ESP32
 
-PlatformIO installieren und im Ordner `firmware` ausführen:
+Install PlatformIO and run these commands in `firmware`:
 
 ```powershell
 pio run -e esp32_d1_mini
@@ -11,26 +11,30 @@ pio run -e esp32_d1_mini --target upload --upload-port COM3
 pio device monitor --baud 115200
 ```
 
-`COM3` durch den tatsächlichen Port ersetzen. Die alternative Boarddefinition heißt `esp32dev`. Konfiguration und GPIO-Zuordnung stehen in `include/config.h`. Die LED ist auf vielen D1-Mini-Boards einfarbig; Helligkeit und Blinkmuster lassen sich einstellen.
+Replace `COM3` with the actual serial port. `esp32dev` is an alternative board definition. GPIO assignments and defaults are in `include/config.h`. Many D1 Mini boards have a single-color LED; brightness and blink patterns can be adjusted. ESP32-S2 has no Bluetooth and cannot be used.
 
-Das Setup-WLAN heißt `PedalBridge-Setup`, Standardpasswort `smb1bridge`. Die Konfigurationsseite ist unter `http://192.168.4.1` erreichbar und enthält Diagnose. WLAN bleibt bis zum ausdrücklichen Ausschalten aktiv. Bei laufender Firmware BOOT/FLASH etwa 2,5 Sekunden halten oder innerhalb von 12 Sekunden zweimal zurücksetzen, um Setup erneut zu öffnen. RST ist der Reset-Pin; der Doppelklick wird durch gespeicherten Zustand erkannt.
+The setup hotspot is **PedalBridge-Setup**, default password **smb1bridge**. Open `http://192.168.4.1` for setup and diagnostics. Use the page's Language selector to switch between English and Deutsch. The preference survives reset and is independent of the phone setting.
 
-Auf der Garmin nach `PedalBridge` suchen. Bluetooth-Namen können auf bereits gekoppelten Geräten zwischengespeichert sein. Die Handy-App nutzt BLE und benötigt keine WLAN-Verbindung zum ESP.
+Wi-Fi remains active until explicitly disabled. While the firmware is running, hold BOOT/FLASH for about 2.5 seconds or press reset twice within 12 seconds to reopen setup. RST is the reset pin; the double press is detected using persisted state.
 
-Ein Firmware-Update muss **ohne Löschen des gesamten Flashs oder Dateisystems** erfolgen, um das Archiv zu erhalten. Die Release-Anwendungsdatei gehört an Adresse `0x10000` und setzt einen bereits mit diesem Projekt eingerichteten Bootloader und dessen Standardpartitionierung voraus. Für ein neues Board das vollständige Projekt mit PlatformIO hochladen. Rohe Geräte-Backups können persönliche Trainingsdaten enthalten.
+Find **PedalBridge** in Garmin's sensor search. Existing pairings may cache the old name. The phone app uses BLE and does not need to connect to the ESP's Wi-Fi.
+
+Update firmware **without erasing the entire flash or filesystem**, to preserve workouts. The release BIN is the application for **address 0x10000** and assumes this project's existing bootloader and standard partition layout. Initialize a new board using PlatformIO. Raw device backups can contain personal training data.
 
 ## Android
 
-JDK 17 und Android SDK 36.1 installieren. `ANDROID_HOME` auf das SDK setzen oder eine nicht versionierte `android/local.properties` mit `sdk.dir=...` anlegen. Im Ordner `android`:
+Install JDK 17 and Android SDK 36.1. Set `ANDROID_HOME` or create an untracked `android/local.properties` containing `sdk.dir=...`. Run in `android`:
 
 ```powershell
 .\gradlew.bat :app:testDebugUnitTest :app:lintRelease :app:assembleRelease
 ```
 
-Linux: `bash gradlew ...`. Das APK liegt unter `app/build/outputs/apk/release/`. Auf dem Handy Bluetooth-Berechtigungen erlauben. Zum Empfang des Pulses auf der Fenix „Herzfrequenz senden“ aktivieren und in den App-Einstellungen den Pulssensor auswählen.
+On Linux, use `bash gradlew ...`. The APK is generated in `app/build/outputs/apk/release/`. Grant Bluetooth permissions on your phone. The app opens in English by default; choose Settings → Appearance → Language to switch to Deutsch. Switching language preserves BLE clients, live data, the selected tab and pending bridge settings.
 
-**Signierung:** Die derzeitige Release-Konfiguration verwendet den lokalen Android-Debug-Schlüssel. Das veröffentlichte APK wird mit dem bisher auf diesem Entwicklungs-PC verwendeten Schlüssel gebaut und kann die vorhandene Installation aktualisieren. Eigene oder CI-Builds mit einem anderen Schlüssel können diese Installation nicht ersetzen. Den bestehenden Schlüssel sichern und niemals in Git einchecken. Eine gesonderte Release-Signierung benötigt einen geplanten Migrationsweg.
+To receive live pulse, enable Broadcast Heart Rate on the Fenix and select its heart rate sensor in the app's Settings.
+
+**Signing:** The current release configuration uses the local Android debug key. Published APKs use the same key as earlier local releases and can update existing installations. Own or CI builds signed with another key cannot replace them. Back up the existing key and never commit it. A dedicated release-signing setup needs a planned migration.
 
 ## Tests
 
-Android-Tests verwenden synthetische Daten. Firmware-Selbsttests lassen sich nach dem regulären Build mit `pio run -e ftms_test`, `pio run -e session_test` und `pio run -e history_test` bauen. Das Ausführen benötigt ein separates Testboard; Archivtests dürfen nicht auf dem produktiven Trainingsarchiv ausgeführt werden.
+Android tests use synthetic data and cover BLE lifecycle, history, charts, dialogs, gestures and language switching. Firmware self-test variants can be compiled after the regular build with `pio run -e ftms_test`, `pio run -e session_test`, and `pio run -e history_test`. Running these tests requires a separate test board. Never run archive self-tests against a production workout archive.

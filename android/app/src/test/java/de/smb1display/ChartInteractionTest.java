@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 @RunWith(RobolectricTestRunner.class) @Config(sdk=35,qualifiers="w412dp-h892dp-port-xxhdpi")
 public class ChartInteractionTest {
     private static double d(String value){return LocalDate.parse(value).toEpochDay();}
-    @Before public void reset(){RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().clear().commit();}
+    @Before public void reset(){RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().clear().commit();RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().putString("language","de").commit();I18n.init(RuntimeEnvironment.getApplication());}
     @Test public void defaultUsesCalendarMonthsAndRealDateSpacing() throws Exception {
         ChartWindow w=new ChartWindow(d("2025-01-01"),d("2026-09-08"));
         assertEquals(d("2026-06-09"),w.start,0);assertEquals(d("2026-09-09"),w.end,0);

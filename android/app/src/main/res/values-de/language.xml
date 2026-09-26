@@ -1,0 +1,11 @@
+<resources>
+    <string name="language_title">Sprache</string>
+    <string name="language_subtitle">Wähle die Sprache für die App.</string>
+    <string name="language_setting">Sprache · %1$s</string>
+    <string name="language_english">English</string>
+    <string name="language_german">Deutsch</string>
+    <string name="source_duration">Dauer</string>
+    <string name="source_calories">Kalorien</string>
+    <string name="source_datetime">Zeitpunkt</string>
+    <string name="source_sport">Sport</string>
+</resources>

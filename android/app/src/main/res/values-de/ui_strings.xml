@@ -1,0 +1,299 @@
+<resources>
+    <string name="ui_dismiss_message_4" formatted="false">"Meldung schließen"</string>
+    <string name="ui_heart_rate_sensor_9" formatted="false">"Pulssensor"</string>
+    <string name="ui_no_heart_rate_sensor_selected_yet_10" formatted="false">"Noch kein Pulssensor ausgewählt"</string>
+    <string name="ui_enable_bluetooth_for_the_heart_rate_sensor_16" formatted="false">"Bluetooth für den Pulssensor einschalten"</string>
+    <string name="ui_select_a_heart_rate_sensor_first_17" formatted="false">"Bitte zuerst einen Pulssensor auswählen"</string>
+    <string name="ui_bluetooth_permission_missing_18" formatted="false">"Bluetooth-Berechtigung fehlt"</string>
+    <string name="ui_enable_bluetooth_19" formatted="false">"Bluetooth einschalten"</string>
+    <string name="ui_bluetooth_scanning_unavailable_20" formatted="false">"Bluetooth-Suche nicht verfügbar"</string>
+    <string name="ui_searching_start_broadcast_heart_rate_on_your_fenix_21" formatted="false">"Suche · auf der Fenix ‘Herzfrequenz senden’ starten"</string>
+    <string name="ui_could_not_start_heart_rate_sensor_search_22" formatted="false">"Pulssensor-Suche konnte nicht starten"</string>
+    <string name="ui_no_heart_rate_sensor_found_enable_broadcast_heart_rate_23" formatted="false">"Kein Pulssensor gefunden · Herzfrequenz senden aktivieren"</string>
+    <string name="ui_select_a_heart_rate_sensor_from_the_list_24" formatted="false">"Pulssensor in der Liste auswählen"</string>
+    <string name="ui_heart_rate_sensor_search_failed_25" formatted="false">"Pulssensor-Suche fehlgeschlagen ("</string>
+    <string name="ui_connecting_27" formatted="false">" · wird verbunden …"</string>
+    <string name="ui_could_not_connect_to_the_heart_rate_sensor_28" formatted="false">"Pulssensor konnte nicht verbunden werden"</string>
+    <string name="ui_heart_rate_sensor_not_responding_enable_broadcast_heart_29" formatted="false">"Pulssensor antwortet nicht · Herzfrequenz senden auf der Fenix aktivieren"</string>
+    <string name="ui_connected_but_no_heart_rate_check_broadcast_heart_rate__30" formatted="false">"Verbunden, aber kein Puls · Herzfrequenz senden auf der Fenix prüfen"</string>
+    <string name="ui_no_recent_heart_rate_readings_31" formatted="false">" · keine aktuellen Pulswerte"</string>
+    <string name="ui_heart_rate_sensor_disconnected_32" formatted="false">"Pulssensor getrennt"</string>
+    <string name="ui_heart_rate_sensor_disconnected_gatt_33" formatted="false">"Pulssensor getrennt · GATT "</string>
+    <string name="ui_will_retry_34" formatted="false">" · erneuter Versuch folgt"</string>
+    <string name="ui_could_not_load_the_heart_rate_service_35" formatted="false">"Pulsdienst konnte nicht geladen werden"</string>
+    <string name="ui_this_device_does_not_provide_a_bluetooth_heart_rate_ser_36" formatted="false">"Gerät bietet keinen Bluetooth-Pulsdienst"</string>
+    <string name="ui_could_not_subscribe_to_heart_rate_readings_37" formatted="false">"Pulswerte konnten nicht abonniert werden"</string>
+    <string name="ui_heart_rate_sensor_is_busy_38" formatted="false">"Pulssensor ist beschäftigt"</string>
+    <string name="ui_heart_rate_subscription_failed_39" formatted="false">"Pulsabo fehlgeschlagen ("</string>
+    <string name="ui_connected_waiting_for_heart_rate_40" formatted="false">" · verbunden, warte auf Puls"</string>
+    <string name="ui_live_heart_rate_connected_41" formatted="false">" · Live-Puls verbunden"</string>
+    <string name="ui_no_valid_heart_rate_check_skin_contact_42" formatted="false">" · kein gültiger Puls / Hautkontakt prüfen"</string>
+    <string name="ui_transfer_interrupted_please_try_loading_again_51" formatted="false">"Übertragung unterbrochen. Bitte erneut laden."</string>
+    <string name="ui_live_heart_rate_55" formatted="false">"Live-Puls: "</string>
+    <string name="ui_beats_per_minute_56" formatted="false">" Schläge pro Minute"</string>
+    <string name="ui_bluetooth_is_off_57" formatted="false">"●  Bluetooth ausgeschaltet"</string>
+    <string name="ui_switching_wi_fi_59" formatted="false">"WLAN wird umgeschaltet"</string>
+    <string name="ui_disconnect_60" formatted="false">"Verbindung trennen"</string>
+    <string name="ui_stop_searching_61" formatted="false">"Suche abbrechen"</string>
+    <string name="ui_connect_bridge_62" formatted="false">"Bridge verbinden"</string>
+    <string name="ui_bluetooth_permission_missing_63" formatted="false">"●  Bluetooth-Berechtigung fehlt"</string>
+    <string name="ui_searching_for_bridge_64" formatted="false">"●  Bridge wird gesucht …"</string>
+    <string name="ui_pedalbridge_not_found_65" formatted="false">"●  PedalBridge nicht gefunden"</string>
+    <string name="ui_turn_on_the_bridge_and_bring_it_within_range_66" formatted="false">"Bridge einschalten und in Reichweite bringen."</string>
+    <string name="ui_search_again_67" formatted="false">"Erneut suchen"</string>
+    <string name="ui_connecting_to_bridge_71" formatted="false">"●  Bridge wird verbunden …"</string>
+    <string name="ui_bluetooth_search_failed_72" formatted="false">"●  Bluetooth-Suche fehlgeschlagen"</string>
+    <string name="ui_android_ble_error_73" formatted="false">"Android BLE-Fehler "</string>
+    <string name="ui_could_not_load_services_synchronize_again_74" formatted="false">"Dienste konnten nicht geladen werden. Erneut synchronisieren."</string>
+    <string name="ui_bluetooth_permission_missing_75" formatted="false">"Bluetooth-Berechtigung fehlt."</string>
+    <string name="ui_connected_reloading_bluetooth_services_76" formatted="false">"Verbindung steht · Bluetooth-Dienste werden neu geladen …"</string>
+    <string name="ui_archive_service_not_found_remove_the_bluetooth_device_i_77" formatted="false">"Archivdienst nicht gefunden. Bluetooth-Gerät in Android entfernen und neu verbinden."</string>
+    <string name="ui_loading_services_79" formatted="false">"●  Dienste werden geladen …"</string>
+    <string name="ui_offline_last_loaded_history_80" formatted="false">"Offline · zuletzt geladene Historie"</string>
+    <string name="ui_disconnected_81" formatted="false">"●  Verbindung getrennt"</string>
+    <string name="ui_bluetooth_disconnect_82" formatted="false">"Bluetooth-Abbruch "</string>
+    <string name="ui_gatt_status_83" formatted="false">" · GATT-Status "</string>
+    <string name="ui_retrying_84" formatted="false">" · neuer Versuch läuft"</string>
+    <string name="ui_refreshing_bluetooth_services_85" formatted="false">"Bluetooth-Dienste werden aktualisiert …"</string>
+    <string name="ui_bluetooth_services_were_not_fully_loaded_86" formatted="false">"Bluetooth-Dienste nicht vollständig geladen"</string>
+    <string name="ui_reconnect_in_settings_87" formatted="false">"Bitte in den Einstellungen die Verbindung erneut herstellen."</string>
+    <string name="ui_live_connected_88" formatted="false">"●  Live verbunden"</string>
+    <string name="ui_live_connected_but_the_archive_service_is_missing_reloa_91" formatted="false">"Live verbunden, aber Archivdienst fehlt. In Einstellungen die Dienste erneut laden."</string>
+    <string name="ui_bluetooth_write_failed_93" formatted="false">"Bluetooth-Schreiben fehlgeschlagen: "</string>
+    <string name="ui_garmin_power_105" formatted="false">"Garmin Power ✓"</string>
+    <string name="ui_no_recent_data_111" formatted="false">"   ·   keine aktuellen Daten"</string>
+    <string name="ui_connected_115" formatted="false">"Verbunden"</string>
+    <string name="ui_connecting_116" formatted="false">"Verbinden …"</string>
+    <string name="ui_disconnected_117" formatted="false">"Getrennt"</string>
+    <string name="ui_unknown_119" formatted="false">"Unbekannt"</string>
+    <string name="ui_no_data_120" formatted="false">"Keine Daten"</string>
+    <string name="ui_power_123" formatted="false">"Leistung"</string>
+    <string name="ui_saving_session_on_the_esp_126" formatted="false">"Sitzung wird auf dem ESP gespeichert"</string>
+    <string name="ui_please_wait_for_the_bluetooth_transfer_127" formatted="false">"Bitte die Bluetooth-Übertragung abwarten"</string>
+    <string name="ui_bluetooth_is_busy_please_try_loading_again_128" formatted="false">"Bluetooth ist beschäftigt. Bitte erneut laden."</string>
+    <string name="ui_your_activities_129" formatted="false">"Deine Aktivitäten"</string>
+    <string name="ui_synchronize_history_130" formatted="false">"Historie synchronisieren"</string>
+    <string name="ui_synchronize_131" formatted="false">"Synchronisieren"</string>
+    <string name="ui_appearance_132" formatted="false">"Darstellung"</string>
+    <string name="ui_connection_133" formatted="false">"Verbindung"</string>
+    <string name="ui_saved_workouts_134" formatted="false">"Gespeicherte Trainings"</string>
+    <string name="ui_bridge_status_135" formatted="false">"Bridge-Status"</string>
+    <string name="ui_connect_the_bridge_to_load_device_settings_136" formatted="false">"Bridge verbinden, um Geräteeinstellungen zu laden."</string>
+    <string name="ui_refresh_status_137" formatted="false">"Status aktualisieren"</string>
+    <string name="ui_live_heart_rate_fenix_bluetooth_sensor_138" formatted="false">"Live-Puls · Fenix / Bluetooth-Sensor"</string>
+    <string name="ui_on_your_fenix_settings_health_wellness_wrist_heart_rate_139" formatted="false">"Auf der Fenix: Einstellungen → Gesundheit und Wellness → Herzfrequenz am Handgelenk → Herzfrequenz senden. Während Aktivitäten auch automatisch möglich."</string>
+    <string name="ui_find_heart_rate_sensor_140" formatted="false">"Pulssensor suchen"</string>
+    <string name="ui_reconnect_heart_rate_sensor_141" formatted="false">"Puls erneut verbinden"</string>
+    <string name="ui_disconnect_heart_rate_sensor_142" formatted="false">"Pulsverbindung trennen"</string>
+    <string name="ui_direct_to_the_app_heart_rate_is_live_only_and_is_not_ye_143" formatted="false">"Direkt zur App · Puls nur live, noch nicht im Trainingsarchiv. Die Bridge zeichnet auch ohne Handy weiter auf."</string>
+    <string name="ui_recording_144" formatted="false">"Aufzeichnung"</string>
+    <string name="ui_save_per_second_data_145" formatted="false">"Sekundenwerte speichern"</string>
+    <string name="ui_automatically_finish_workout_after_146" formatted="false">"Training automatisch abschließen nach"</string>
+    <string name="ui_minutes_without_movement_147" formatted="false">" Minuten ohne Bewegung"</string>
+    <string name="ui_status_light_148" formatted="false">"Statuslicht"</string>
+    <string name="ui_brightness_149" formatted="false">"Helligkeit"</string>
+    <string name="ui_connection_status_150" formatted="false">"Verbindungsstatus"</string>
+    <string name="ui_short_pulse_151" formatted="false">"Kurzer Impuls"</string>
+    <string name="ui_double_pulse_152" formatted="false">"Doppelimpuls"</string>
+    <string name="ui_off_153" formatted="false">"Aus"</string>
+    <string name="ui_single_color_led_the_separate_power_indicator_is_unaffe_154" formatted="false">"Einfarbige LED · die separate Stromanzeige bleibt unverändert."</string>
+    <string name="ui_save_changes_155" formatted="false">"Änderungen speichern"</string>
+    <string name="ui_brightness_156" formatted="false">"Helligkeit · "</string>
+    <string name="ui_storage_backup_160" formatted="false">"Speicher &amp; Sicherung"</string>
+    <string name="ui_storage_details_load_after_connecting_161" formatted="false">"Speicher wird nach dem Verbinden geladen."</string>
+    <string name="ui_back_up_archive_as_zip_162" formatted="false">"Archiv als ZIP sichern"</string>
+    <string name="ui_pedalbridge_archive_zip_164" formatted="false">"PedalBridge-Archiv.zip"</string>
+    <string name="ui_import_workout_file_165" formatted="false">"Trainingsdatei importieren"</string>
+    <string name="ui_offline_appearance_and_archive_remain_available_169" formatted="false">"Offline · Darstellung und Archiv sind weiterhin verfügbar."</string>
+    <string name="ui_disconnects_last_gatt_status_170" formatted="false">" Verbindungsabbrüche · letzter GATT-Status "</string>
+    <string name="ui_reloading_bluetooth_services_171" formatted="false">"Bluetooth-Dienste werden neu geladen …"</string>
+    <string name="ui_connected_loading_device_settings_172" formatted="false">"Verbunden · Geräteeinstellungen werden geladen …"</string>
+    <string name="ui_connected_synchronizing_archive_settings_can_be_saved_a_173" formatted="false">"Verbunden · Archiv wird synchronisiert. Speichern ist danach möglich."</string>
+    <string name="ui_unsaved_changes_174" formatted="false">"Ungespeicherte Änderungen"</string>
+    <string name="ui_connected_device_settings_up_to_date_175" formatted="false">"Verbunden · Geräteeinstellungen aktuell"</string>
+    <string name="ui_local_archive_176" formatted="false">"Lokales Archiv · "</string>
+    <string name="ui_cannot_read_local_archive_177" formatted="false">"Lokales Archiv nicht lesbar: "</string>
+    <string name="ui_no_esp_archive_loaded_yet_178" formatted="false">"Noch kein ESP-Archiv geladen"</string>
+    <string name="ui_saved_snapshot_179" formatted="false">"Gespeicherter Stand · "</string>
+    <string name="ui_cannot_read_saved_history_please_load_again_180" formatted="false">"Gespeicherte Historie nicht lesbar. Bitte neu laden."</string>
+    <string name="ui_date_unknown_182" formatted="false">"Datum unbekannt"</string>
+    <string name="ui_offline_183" formatted="false">"Offline · "</string>
+    <string name="ui_loading_history_over_bluetooth_184" formatted="false">"Historie wird über Bluetooth geladen …"</string>
+    <string name="ui_could_not_request_history_185" formatted="false">"Historie konnte nicht angefordert werden"</string>
+    <string name="ui_could_not_start_bluetooth_read_186" formatted="false">"Bluetooth-Lesen konnte nicht gestartet werden"</string>
+    <string name="ui_could_not_read_history_187" formatted="false">"Historie konnte nicht gelesen werden: "</string>
+    <string name="ui_esp_is_not_responding_yet_please_try_again_188" formatted="false">"ESP antwortet noch nicht. Bitte erneut versuchen."</string>
+    <string name="ui_incomplete_history_data_189" formatted="false">"Unvollständige Historien-Daten"</string>
+    <string name="ui_mybodytone_import_190" formatted="false">"MyBodytone-Import"</string>
+    <string name="ui_recording_191" formatted="false">"Messverlauf "</string>
+    <string name="ui_load_history_193" formatted="false">"Historie laden"</string>
+    <string name="ui_version_196" formatted="false">"Version"</string>
+    <string name="ui_import_file_on_bridge_1f_kib_workouts_appear_in_the_com_200" formatted="false">"Importdatei auf der Bridge: %.1f KiB · Trainings erscheinen im gemeinsamen Verlauf"</string>
+    <string name="ui_no_additional_import_file_on_bridge_201" formatted="false">"Keine zusätzliche Importdatei auf der Bridge"</string>
+    <string name="ui_page_order_206" formatted="false">"Seitenreihenfolge"</string>
+    <string name="ui_updated_208" formatted="false">"Aktualisiert · "</string>
+    <string name="ui_could_not_archive_history_210" formatted="false">"Historie konnte nicht archiviert werden: "</string>
+    <string name="ui_offline_saved_data_is_preserved_211" formatted="false">"Offline · gespeicherte Daten bleiben erhalten"</string>
+    <string name="ui_archive_synchronized_212" formatted="false">"Archiv synchronisiert · "</string>
+    <string name="ui_invalid_recording_file_list_213" formatted="false">"Ungültige Messdateiliste"</string>
+    <string name="ui_invalid_session_id_215" formatted="false">"Ungültige Sitzungskennung"</string>
+    <string name="ui_import_checksum_mismatch_please_synchronize_again_216" formatted="false">"Import-Prüfsumme stimmt nicht; bitte erneut synchronisieren"</string>
+    <string name="ui_import_failed_217" formatted="false">"Import fehlgeschlagen: "</string>
+    <string name="ui_recording_file_is_incomplete_retained_on_esp_218" formatted="false">"Messdatei ist unvollständig; bleibt auf dem ESP"</string>
+    <string name="ui_unknown_recording_format_retained_on_esp_219" formatted="false">"Unbekanntes Messformat; bleibt auf dem ESP"</string>
+    <string name="ui_saving_recording_permanently_220" formatted="false">"Messverlauf wird dauerhaft gespeichert …"</string>
+    <string name="ui_recording_saved_esp_cleanup_will_be_retried_on_the_next_221" formatted="false">"Verlauf gespeichert; Freigabe auf ESP wird beim nächsten Sync wiederholt"</string>
+    <string name="ui_save_failed_esp_retains_recording_222" formatted="false">"Speichern fehlgeschlagen; ESP behält Verlauf: "</string>
+    <string name="ui_could_not_load_device_status_please_refresh_status_223" formatted="false">"Gerätestatus konnte nicht geladen werden. Bitte Status aktualisieren."</string>
+    <string name="ui_recording_saved_confirmation_missing_224" formatted="false">"Verlauf gespeichert; Bestätigung fehlt"</string>
+    <string name="ui_bluetooth_is_busy_refresh_status_again_225" formatted="false">"Bluetooth ist beschäftigt. Status erneut laden."</string>
+    <string name="ui_recording_saved_could_not_read_confirmation_226" formatted="false">"Verlauf gespeichert; Bestätigung konnte nicht gelesen werden"</string>
+    <string name="ui_recording_backed_up_esp_cleanup_not_confirmed_229" formatted="false">"Verlauf gesichert; ESP-Freigabe nicht bestätigt"</string>
+    <string name="ui_recording_backed_up_esp_did_not_confirm_deletion_231" formatted="false">"Verlauf gesichert; ESP hat Löschung nicht bestätigt"</string>
+    <string name="ui_cannot_read_device_status_check_the_connection_again_232" formatted="false">"Gerätestatus nicht lesbar. Verbindung erneut prüfen."</string>
+    <string name="ui_cannot_read_esp_status_local_backup_is_preserved_233" formatted="false">"ESP-Status nicht lesbar; lokale Sicherung bleibt erhalten"</string>
+    <string name="ui_turn_off_setup_wi_fi_236" formatted="false">"Konfigurations-WLAN ausschalten"</string>
+    <string name="ui_turn_on_setup_wi_fi_237" formatted="false">"Konfigurations-WLAN einschalten"</string>
+    <string name="ui_0f_of_0f_kib_used_0f_kib_free_d_workouts_d_recordings_o_242" formatted="false">"%.0f von %.0f KiB belegt · %.0f KiB frei\n%d Trainings · %d Messverläufe auf der Bridge\nNoch etwa %.1f Stunden Sekundenwerte\n%d ältere Verläufe automatisch freigegeben%s"</string>
+    <string name="ui_per_second_recording_paused_storage_full_247" formatted="false">"\nSekundenaufzeichnung pausiert: Speicher voll"</string>
+    <string name="ui_file_not_opened_248" formatted="false">"Datei nicht geöffnet"</string>
+    <string name="ui_import_file_too_large_max_2_mb_249" formatted="false">"Importdatei zu groß (max. 2 MB)"</string>
+    <string name="ui_new_workouts_imported_250" formatted="false">" Trainings neu importiert"</string>
+    <string name="ui_archive_backed_up_including_recordings_251" formatted="false">"Archiv einschließlich Messverläufen gesichert"</string>
+    <string name="ui_backup_failed_252" formatted="false">"Sicherung fehlgeschlagen: "</string>
+    <string name="ui_duration_257" formatted="false">"Dauer "</string>
+    <string name="ui_active_259" formatted="false">" · aktiv "</string>
+    <string name="ui_partly_estimated_262" formatted="false">" (teilweise geschätzt)"</string>
+    <string name="ui_power_avg_263" formatted="false">"\nLeistung Ø "</string>
+    <string name="ui_max_265" formatted="false">" · max "</string>
+    <string name="ui_cadence_avg_267" formatted="false">"\nKadenz Ø "</string>
+    <string name="ui_speed_avg_270" formatted="false">"\nTempo Ø "</string>
+    <string name="ui_work_273" formatted="false">"\nArbeit "</string>
+    <string name="ui_crank_revolutions_277" formatted="false">"Kurbelumdrehungen"</string>
+    <string name="ui_d_workouts_1f_km_s_0f_kcal_in_total_292" formatted="false">"%d Trainings\n\n%,.1f km     ·     %s\n%,.0f kcal insgesamt"</string>
+    <string name="ui_all_workouts_tap_to_compare_293" formatted="false">"Alle Trainings · antippen zum Vergleichen"</string>
+    <string name="ui_current_workout_in_progress_295" formatted="false">"Aktuell · Training läuft"</string>
+    <string name="ui_your_first_workout_appears_here_after_synchronization_y_296" formatted="false">"Dein erstes Training erscheint hier nach der Synchronisierung. Vorhandene Trainings kannst du in den Einstellungen importieren."</string>
+    <string name="ui_close_302" formatted="false">"Schließen"</string>
+    <string name="ui_compare_303" formatted="false">"Vergleichen"</string>
+    <string name="ui_could_not_load_history_304" formatted="false">"Verlauf konnte nicht geladen werden: "</string>
+    <string name="ui_detected_heart_rate_sensors_appear_here_enable_broadcas_305" formatted="false">"Gefundene Pulssensoren erscheinen hier. Aktiviere auf der Fenix zuerst Herzfrequenz senden."</string>
+    <string name="ui_connect_307" formatted="false">" verbinden"</string>
+    <string name="ui_live_heart_rate_308" formatted="false">"LIVE-PULS"</string>
+    <string name="ui_connect_heart_rate_sensor_309" formatted="false">"Pulssensor verbinden"</string>
+    <string name="ui_enable_broadcast_heart_rate_on_your_fenix_then_select_y_310" formatted="false">"Auf der Fenix Herzfrequenz senden aktivieren, dann deine Uhr auswählen."</string>
+    <string name="ui_searching_311" formatted="false">"Suche läuft …"</string>
+    <string name="ui_disconnected_312" formatted="false">"●  Getrennt"</string>
+    <string name="ui_appearance_314" formatted="false">"DARSTELLUNG"</string>
+    <string name="ui_your_color_scheme_315" formatted="false">"Dein Farbschema"</string>
+    <string name="ui_choose_a_mode_or_follow_your_phone_316" formatted="false">"Wähle einen Modus oder folge deinem Smartphone."</string>
+    <string name="ui_follow_system_317" formatted="false">"Wie das System"</string>
+    <string name="ui_light_318" formatted="false">"Hell"</string>
+    <string name="ui_dark_319" formatted="false">"Dunkel"</string>
+    <string name="ui_follows_system_settings_320" formatted="false">"Wechselt mit den Systemeinstellungen"</string>
+    <string name="ui_light_surfaces_and_clear_contrast_321" formatted="false">"Helle Flächen und klare Kontraste"</string>
+    <string name="ui_comfortable_in_low_light_322" formatted="false">"Angenehm bei wenig Licht"</string>
+    <string name="ui_selected_324" formatted="false">", ausgewählt"</string>
+    <string name="ui_color_scheme_325" formatted="false">"Farbschema · "</string>
+    <string name="ui_system_326" formatted="false">"System"</string>
+    <string name="ui_workout_duration_327" formatted="false">"Trainingsdauer"</string>
+    <string name="ui_distance_328" formatted="false">"Distanz"</string>
+    <string name="ui_energy_per_minute_329" formatted="false">"Energie pro Minute"</string>
+    <string name="ui_avg_power_330" formatted="false">"Ø Leistung"</string>
+    <string name="ui_your_progress_337" formatted="false">"Deine Entwicklung"</string>
+    <string name="ui_workout_chart_metric_338" formatted="false">"Messwert für Trainingsdiagramm"</string>
+    <string name="ui_intensity_by_kcal_min_blue_lower_teal_medium_mint_highe_339" formatted="false">"Intensität nach kcal/min: Blau niedriger · Petrol mittel · Türkis höher. Relativ zur gleichen Quelle, kalorienbasiert geschätzt. Grau: nicht eingeordnet."</string>
+    <string name="ui_blue_lower_340" formatted="false">"Blau niedriger"</string>
+    <string name="ui_teal_medium_341" formatted="false">"Petrol mittel"</string>
+    <string name="ui_mint_higher_342" formatted="false">"Türkis höher"</string>
+    <string name="ui_3_months_343" formatted="false">"3 Monate"</string>
+    <string name="ui_all_time_344" formatted="false">"Gesamt"</string>
+    <string name="ui_zoom_out_346" formatted="false">"Zeitraum vergrößern"</string>
+    <string name="ui_zoom_in_348" formatted="false">"Zeitraum verkleinern"</string>
+    <string name="ui_tap_a_point_for_workout_details_349" formatted="false">"Punkt antippen für Trainingsdetails"</string>
+    <string name="ui_two_fingers_zoom_and_pan_swipe_sideways_points_workouts_350" formatted="false">"Zwei Finger: zoomen und verschieben · seitlich wischen\nPunkte: Trainings · Linie: Mittel der letzten 5 gültigen Trainings"</string>
+    <string name="ui_workouts_in_range_353" formatted="false">" Trainings im Zeitraum · "</string>
+    <string name="ui_undated_workouts_shown_only_in_the_list_354" formatted="false">" ohne Datum nur in der Liste"</string>
+    <string name="ui_calories_are_device_dependent_estimates_355" formatted="false">"\nKalorien sind geräteabhängige Schätzwerte."</string>
+    <string name="ui_missing_values_and_zero_power_excluded_356" formatted="false">"\nFehlende Werte und Leistung 0 ausgelassen."</string>
+    <string name="ui_workouts_change_the_range_using_the_buttons_individual__358" formatted="false">" Trainings. Zeitraum mit den Schaltflächen ändern; Einzelwerte in der Trainingsliste."</string>
+    <string name="ui_no_values_in_this_range_362" formatted="false">"Keine Werte in diesem Zeitraum"</string>
+    <string name="ui_unsupported_mybodytone_import_file_376" formatted="false">"Keine unterstützte MyBodytone-Importdatei"</string>
+    <string name="ui_too_many_sessions_377" formatted="false">"Zu viele Sitzungen"</string>
+    <string name="ui_invalid_or_duplicate_import_id_381" formatted="false">"Ungültige oder doppelte Importkennung"</string>
+    <string name="ui_invalid_value_382" formatted="false">"Ungültiger Wert: "</string>
+    <string name="ui_import_failed_387" formatted="false">"Import fehlgeschlagen"</string>
+    <string name="ui_import_file_not_backed_up_390" formatted="false">"Importdatei nicht gesichert"</string>
+    <string name="ui_workout_archive_425" formatted="false">"TRAININGSARCHIV"</string>
+    <string name="ui_your_workout_426" formatted="false">"Dein Training"</string>
+    <string name="ui_workout_duration_427" formatted="false">"TRAININGSDAUER"</string>
+    <string name="ui_active_time_428" formatted="false">"Davon aktiv · "</string>
+    <string name="ui_energy_429" formatted="false">"Energie"</string>
+    <string name="ui_avg_cadence_430" formatted="false">"Ø Trittfrequenz"</string>
+    <string name="ui_avg_speed_431" formatted="false">"Ø Tempo"</string>
+    <string name="ui_avg_resistance_433" formatted="false">"Ø Stufe"</string>
+    <string name="ui_intensity_436" formatted="false">"Einordnung"</string>
+    <string name="ui_1f_kcal_per_minute_437" formatted="false">"%.1f kcal pro Minute"</string>
+    <string name="ui_relative_to_comparable_workouts_from_the_same_source_cl_438" formatted="false">"Relativ zu vergleichbaren Trainings derselben Quelle. Die Einordnung ist ab fünf Trainings von mindestens zehn Minuten verfügbar."</string>
+    <string name="ui_more_metrics_439" formatted="false">"Weitere Messwerte"</string>
+    <string name="ui_max_power_440" formatted="false">"Max. Leistung"</string>
+    <string name="ui_max_cadence_441" formatted="false">"Max. Trittfrequenz"</string>
+    <string name="ui_max_speed_442" formatted="false">"Max. Tempo"</string>
+    <string name="ui_mechanical_work_443" formatted="false">"Mechanische Arbeit"</string>
+    <string name="ui_revolutions_444" formatted="false">"Umdrehungen"</string>
+    <string name="ui_avg_heart_rate_445" formatted="false">"Ø Herzfrequenz"</string>
+    <string name="ui_unavailable_448" formatted="false">"Nicht verfügbar"</string>
+    <string name="ui_active_time_449" formatted="false">"Aktive Zeit"</string>
+    <string name="ui_pauses_451" formatted="false">"Pausen"</string>
+    <string name="ui_imported_from_mybodytone_458" formatted="false">"Aus MyBodytone übernommen"</string>
+    <string name="ui_recording_saved_on_your_phone_459" formatted="false">"Messverlauf auf dem Smartphone gespeichert"</string>
+    <string name="ui_recorded_by_your_bridge_460" formatted="false">"Über deine Bridge aufgezeichnet"</string>
+    <string name="ui_time_shown_as_reported_by_the_source_per_second_data_is_461" formatted="false">"Zeitpunkt wie in der Quelle angezeigt. Sekundenwerte sind für importierte Trainings nicht verfügbar."</string>
+    <string name="ui_a_heart_rate_of_0_probably_indicates_a_missing_reading_464" formatted="false">"Puls 0 ist vermutlich ein fehlender Messwert."</string>
+    <string name="ui_a_power_value_of_0_was_imported_unchanged_and_is_unveri_466" formatted="false">"Leistung 0 wurde unverändert übernommen und ist nicht bestätigt."</string>
+    <string name="ui_show_original_values_468" formatted="false">"Originalwerte anzeigen"</string>
+    <string name="ui_heart_rate_source_470" formatted="false">"Herzfrequenz (Quelle)"</string>
+    <string name="ui_hide_original_values_471" formatted="false">"Originalwerte ausblenden"</string>
+    <string name="ui_calories_estimated_from_power_472" formatted="false">"Kalorien aus Leistung geschätzt"</string>
+    <string name="ui_calories_from_the_bike_energy_counter_473" formatted="false">"Kalorien aus dem Energiezähler des Bikes"</string>
+    <string name="ui_workout_comparison_474" formatted="false">"TRAININGSVERGLEICH"</string>
+    <string name="ui_similar_workouts_475" formatted="false">"Ähnliche Trainings"</string>
+    <string name="ui_compare_workouts_with_similar_duration_and_resistance_476" formatted="false">"Vergleiche Einheiten mit ähnlicher Dauer und Stufe."</string>
+    <string name="ui_resistance_478" formatted="false">"Stufe "</string>
+    <string name="ui_comparison_criteria_479" formatted="false">"Vergleichsrahmen"</string>
+    <string name="ui_cadence_comparison_480" formatted="false">"Trittfrequenz im Vergleich"</string>
+    <string name="ui_for_a_trend_481" formatted="false">"Für einen Trend"</string>
+    <string name="ui_no_trend_yet_482" formatted="false">"Noch kein Trend"</string>
+    <string name="ui_matching_workouts_483" formatted="false">"Passende Trainings"</string>
+    <string name="ui_interpretation_484" formatted="false">"Zur Einordnung"</string>
+    <string name="ui_intensity_unclassified_492" formatted="false">"Intensität nicht eingeordnet"</string>
+    <string name="ui_relatively_lower_493" formatted="false">"Relativ niedriger"</string>
+    <string name="ui_mid_range_494" formatted="false">"Im mittleren Bereich"</string>
+    <string name="ui_relatively_higher_495" formatted="false">"Relativ höher"</string>
+    <string name="ui_this_workout_has_no_average_resistance_value_comparing__496" formatted="false">"Für diese Sitzung fehlt eine durchschnittliche Stufe. Ein Vergleich über Stufe und Dauer ist deshalb noch nicht möglich."</string>
+    <string name="ui_comparison_uses_workouts_lasting_at_least_10_minutes_497" formatted="false">"Für den Vergleich werden Trainings ab 10 Minuten verwendet."</string>
+    <string name="ui_resistance_1f_1_duration_0f_min_20_same_data_source_kno_498" formatted="false">"Stufe %.1f ± 1 · Dauer %.0f min ± 20 %%\nGleiche Datenquelle / bekannte Bike-Zuordnung\n%d passende Trainings einschließlich Referenz\n\n"</string>
+    <string name="ui_avg_cadence_earliest_d_1f_rpm_latest_d_1f_rpm_change_1f_499" formatted="false">"Ø Trittfrequenz\nFrüheste %d: %.1f rpm\nNeueste %d: %.1f rpm\nVeränderung: %+.1f %%\n\n"</string>
+    <string name="ui_a_trend_requires_at_least_6_matching_dated_workouts_wit_500" formatted="false">"Für einen Trend werden mindestens 6 passende, datierte Trainings mit Trittfrequenz benötigt.\n\n"</string>
+    <string name="ui_higher_cadence_under_similar_conditions_is_a_performanc_501" formatted="false">"Höhere Trittfrequenz unter ähnlichen Bedingungen ist ein Leistungshinweis, kein Beweis für bessere Fitness. Pausen und Intervalle fehlen in den Import-Durchschnitten.\n"</string>
+    <string name="ui_mybodytone_does_not_identify_the_bike_reliably_comparis_502" formatted="false">"MyBodytone nennt kein sicher zugeordnetes Bike. Der Vergleich setzt dasselbe Bike und unveränderte Stufen voraus.\n"</string>
+    <string name="ui_matching_workouts_newest_first_503" formatted="false">"\nPassende Trainings (neueste zuerst):\n"</string>
+    <string name="ui_s_0f_min_resistance_1f_s_rpm_504" formatted="false">"%s · %.0f min · Stufe %.1f · %s rpm\n"</string>
+    <string name="ui_additional_matching_workouts_are_included_in_the_trend_505" formatted="false">"Weitere passende Trainings sind im Trend berücksichtigt."</string>
+    <string name="ui_bridge_disconnected_506" formatted="false">"Bridge\nNicht verbunden"</string>
+    <string name="ui_bike_disconnected_507" formatted="false">"Bike\nNicht verbunden"</string>
+    <string name="ui_garmin_disconnected_508" formatted="false">"Garmin\nNicht verbunden"</string>
+    <string name="ui_preparing_connection_509" formatted="false">"Verbindung wird vorbereitet"</string>
+    <string name="ui_power_510" formatted="false">"LEISTUNG"</string>
+    <string name="ui_live_heart_rate_not_connected_yet_512" formatted="false">"Live-Puls: noch nicht verbunden"</string>
+    <string name="ui_cadence_513" formatted="false">"Trittfrequenz"</string>
+    <string name="ui_speed_515" formatted="false">"Tempo"</string>
+    <string name="ui_time_518" formatted="false">"Zeit"</string>
+    <string name="ui_resistance_520" formatted="false">"Stufe"</string>
+    <string name="ui_finish_workout_523" formatted="false">"Training abschließen"</string>
+    <string name="ui_settings_524" formatted="false">"Einstellungen"</string>
+    <string name="ui_color_scheme_system_525" formatted="false">"Farbschema · System"</string>
+    <string name="ui_load_wi_fi_status_526" formatted="false">"WLAN-Status laden"</string>
+    <string name="ui_workout_527" formatted="false">"Training"</string>
+    <string name="ui_history_528" formatted="false">"Verlauf"</string>
+</resources>

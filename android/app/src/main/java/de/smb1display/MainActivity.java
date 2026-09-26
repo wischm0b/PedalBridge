@@ -51,6 +51,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 public final class MainActivity extends Activity {
+    private byte[] lastLivePacket;
     private static final int BLUETOOTH_PERMISSION_REQUEST = 42;
     private static final String DEVICE_NAME = "PedalBridge";
     private static final String TRAINER_NAME = "SpinRelay";
@@ -123,7 +124,7 @@ public final class MainActivity extends Activity {
     private int historyOffset, historyTotal, historyRetries;
     private final ByteArrayOutputStream historyBytes = new ByteArrayOutputStream();
     private String historyCacheKey = "history";
-    private final Runnable historyTimeout = () -> historyFailed("Übertragung unterbrochen. Bitte erneut laden.");
+    private final Runnable historyTimeout = () -> historyFailed(I18n.t(R.string.ui_transfer_interrupted_please_try_loading_again_51));
     private long lastSuccessfulSyncMs=0;
     private int lastDisconnectStatus=0;
     private boolean syncAfterClock=false,notificationsInitialized=false;
@@ -131,11 +132,12 @@ public final class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle state) {
+        I18n.init(this);
         applySavedTheme();
         super.onCreate(state);
         archiveDb=new TrainingDatabase(this);
         heartRateClient=new HeartRateClient(this,new HeartRateClient.Listener(){
-            public void state(int bpm,String message){if(heartRate!=null){heartRate.setText(bpm>0?"♥  "+bpm+" bpm":"♥  — bpm");heartRate.setContentDescription("Live-Puls: "+(bpm>0?bpm+" Schläge pro Minute":message));}if(heartRateStatus!=null)heartRateStatus.setText(message);if(heartRateSearchStatus!=null)heartRateSearchStatus.setText(message);if(heartRateSearchProgress!=null)heartRateSearchProgress.setVisibility(heartRateClient.isSearching()?View.VISIBLE:View.GONE);}
+            public void state(int bpm,String message){if(heartRate!=null){heartRate.setText(bpm>0?"♥  "+bpm+" bpm":"♥  — bpm");heartRate.setContentDescription(I18n.t(R.string.ui_live_heart_rate_55)+(bpm>0?bpm+I18n.t(R.string.ui_beats_per_minute_56):message));}if(heartRateStatus!=null)heartRateStatus.setText(message);if(heartRateSearchStatus!=null)heartRateSearchStatus.setText(message);if(heartRateSearchProgress!=null)heartRateSearchProgress.setVisibility(heartRateClient.isSearching()?View.VISIBLE:View.GONE);}
             public void devices(java.util.List<HeartRateClient.Device> devices){heartRateDevices=devices;renderHeartRateDevices();}
         });
         inflateUi();
@@ -144,7 +146,7 @@ public final class MainActivity extends Activity {
         BluetoothAdapter adapter = manager == null ? null : manager.getAdapter();
         scanner = adapter == null ? null : adapter.getBluetoothLeScanner();
         if (adapter == null || !adapter.isEnabled()) {
-            showState("●  Bluetooth ausgeschaltet", false);
+            showState(I18n.t(R.string.ui_bluetooth_is_off_57), false);
         } else if ((checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)) {
             beginConnection();
         } else {
@@ -154,7 +156,8 @@ public final class MainActivity extends Activity {
     }
 
     private void inflateUi() {
-        setContentView(R.layout.activity_main);
+        Context uiContext=I18n.localize(this);
+        setContentView(android.view.LayoutInflater.from(this).cloneInContext(uiContext).inflate(R.layout.activity_main,(android.view.ViewGroup)findViewById(android.R.id.content),false));
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         status = findViewById(R.id.status);
@@ -181,10 +184,10 @@ public final class MainActivity extends Activity {
             else beginConnection();
         });
         resetButton.setOnClickListener(v -> resetSession());
-        wifiButton.setOnClickListener(v -> { if(espStorage!=null) sendControl((byte)(espStorage.optBoolean("wifi")?2:0x21),"WLAN wird umgeschaltet"); });
+        wifiButton.setOnClickListener(v -> { if(espStorage!=null) sendControl((byte)(espStorage.optBoolean("wifi")?2:0x21),I18n.t(R.string.ui_switching_wi_fi_59)); });
         resetButton.setEnabled(connected);
         wifiButton.setEnabled(connected && espStorage!=null);
-        connectButton.setText(connected?"Verbindung trennen":scanning?"Suche abbrechen":"Bridge verbinden");
+        connectButton.setText(connected?I18n.t(R.string.ui_disconnect_60):scanning?I18n.t(R.string.ui_stop_searching_61):I18n.t(R.string.ui_connect_bridge_62));
         if(espStorage!=null)updateStorage(espStorage);
         if(heartRateClient!=null)heartRateClient.refresh();
 
@@ -211,7 +214,7 @@ public final class MainActivity extends Activity {
         boolean granted = true;
         for (int result : grants) granted &= result == PackageManager.PERMISSION_GRANTED;
         if (granted) {beginConnection();heartRateClient.restore();}
-        else showState("●  Bluetooth-Berechtigung fehlt", false);
+        else showState(I18n.t(R.string.ui_bluetooth_permission_missing_63), false);
     }
 
     private boolean hasBluetoothPermissions() {
@@ -224,8 +227,8 @@ public final class MainActivity extends Activity {
         handler.removeCallbacks(reconnect);
         manualDisconnect = false; cacheRefreshAttempted=false;servicesRecovering=false;
         scanning = true;
-        showState("●  Bridge wird gesucht …", false);
-        connectButton.setText("Suche abbrechen");
+        showState(I18n.t(R.string.ui_searching_for_bridge_64), false);
+        connectButton.setText(I18n.t(R.string.ui_stop_searching_61));
         ScanSettings settings = new ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
         scanner.startScan(null, settings, scanCallback);
@@ -235,9 +238,9 @@ public final class MainActivity extends Activity {
     private final Runnable scanTimeout = () -> {
         if (!scanning) return;
         stopScan();
-        showState("●  PedalBridge nicht gefunden", false);
-        detail.setText("Bridge einschalten und in Reichweite bringen.");
-        connectButton.setText("Erneut suchen");
+        showState(I18n.t(R.string.ui_pedalbridge_not_found_65), false);
+        detail.setText(I18n.t(R.string.ui_turn_on_the_bridge_and_bring_it_within_range_66));
+        connectButton.setText(I18n.t(R.string.ui_search_again_67));
         if(!manualDisconnect && unexpectedDisconnects>0){handler.removeCallbacks(reconnect);handler.postDelayed(reconnect,30000);}
     };
 
@@ -249,7 +252,7 @@ public final class MainActivity extends Activity {
             if (name == null && (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)) name = result.getDevice().getName();
             if (!DEVICE_NAME.equals(name) && !TRAINER_NAME.equals(name) && !"SMB1 Bridge".equals(name) && !"SMB1 Trainer".equals(name) && !"SpinRelay Bridge".equals(name)) return;
             stopScan();
-            showState("●  Bridge wird verbunden …", false);
+            showState(I18n.t(R.string.ui_connecting_to_bridge_71), false);
             gatt = result.getDevice().connectGatt(MainActivity.this, false, gattCallback,
                     android.bluetooth.BluetoothDevice.TRANSPORT_LE);
         }
@@ -257,9 +260,9 @@ public final class MainActivity extends Activity {
         @Override public void onScanFailed(int errorCode) {
             runOnUiThread(() -> {
                 scanning = false;
-                showState("●  Bluetooth-Suche fehlgeschlagen", false);
-                detail.setText("Android BLE-Fehler " + errorCode);
-                connectButton.setText("Erneut suchen");
+                showState(I18n.t(R.string.ui_bluetooth_search_failed_72), false);
+                detail.setText(I18n.t(R.string.ui_android_ble_error_73) + errorCode);
+                connectButton.setText(I18n.t(R.string.ui_search_again_67));
             });
         }
     };
@@ -272,7 +275,7 @@ public final class MainActivity extends Activity {
 
     private void discoverSafely(BluetoothGatt source){
         if(source!=gatt || checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT)!=PackageManager.PERMISSION_GRANTED)return;
-        try{if(!source.discoverServices()){servicesRecovering=false;historyStatus.setText("Dienste konnten nicht geladen werden. Erneut synchronisieren.");}}catch(SecurityException e){servicesRecovering=false;historyStatus.setText("Bluetooth-Berechtigung fehlt.");}
+        try{if(!source.discoverServices()){servicesRecovering=false;historyStatus.setText(I18n.t(R.string.ui_could_not_load_services_synchronize_again_74));}}catch(SecurityException e){servicesRecovering=false;historyStatus.setText(I18n.t(R.string.ui_bluetooth_permission_missing_75));}
     }
     private BluetoothGattCharacteristic findCharacteristic(BluetoothGatt source,UUID uuid) {
         for(BluetoothGattService service:source.getServices()){BluetoothGattCharacteristic value=service.getCharacteristic(uuid);if(value!=null)return value;}return null;
@@ -280,7 +283,7 @@ public final class MainActivity extends Activity {
     private void recoverServices() {
         if(gatt==null || !hasBluetoothPermissions() || servicesRecovering)return;
         notificationsInitialized=false;servicesRecovering=true;historyLoading=false;managementReading=false;initialStatusPending=false;
-        historyStatus.setText("Verbindung steht · Bluetooth-Dienste werden neu geladen …");updateSettingsAvailability();
+        historyStatus.setText(I18n.t(R.string.ui_connected_reloading_bluetooth_services_76));updateSettingsAvailability();
         BluetoothGatt source=gatt;
         handler.postDelayed(()->{if(source==gatt && servicesRecovering)refreshCachedServices(source);},5000);
         // Ask the firmware to send the standard GATT Service Changed indication.
@@ -289,7 +292,7 @@ public final class MainActivity extends Activity {
     }
     private void refreshCachedServices(BluetoothGatt source) {
         if(source!=gatt || !hasBluetoothPermissions() || (historyCharacteristic!=null && managementCharacteristic!=null))return;
-        if(cacheRefreshAttempted){servicesRecovering=false;historyStatus.setText("Archivdienst nicht gefunden. Bluetooth-Gerät in Android entfernen und neu verbinden.");updateSettingsAvailability();return;}
+        if(cacheRefreshAttempted){servicesRecovering=false;historyStatus.setText(I18n.t(R.string.ui_archive_service_not_found_remove_the_bluetooth_device_i_77));updateSettingsAvailability();return;}
         notificationsInitialized=false;cacheRefreshAttempted=true;controlBusy=false;handler.removeCallbacks(historyTimeout);
         // Android offers no public cache invalidation API. This optional fallback
         // is bounded to one attempt; unavailable implementations fail visibly.
@@ -311,7 +314,7 @@ public final class MainActivity extends Activity {
                     source.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_BALANCED);
                     if(!source.requestMtu(247)) discoverSafely(source);
                 }
-                runOnUiThread(() -> showState("●  Dienste werden geladen …", false));
+                runOnUiThread(() -> showState(I18n.t(R.string.ui_loading_services_79), false));
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 source.close();if(gatt!=source)return;
                 if (gatt == source) gatt = null;
@@ -321,11 +324,11 @@ public final class MainActivity extends Activity {
                 if (!manualDisconnect) unexpectedDisconnects++;
                 runOnUiThread(() -> {
                     historyCharacteristic = null;managementCharacteristic=null;espStorage=null;managementReading=false;initialStatusPending=false;servicesRecovering=false;
-                    historyFailed("Offline · zuletzt geladene Historie");
-                    showState("●  Verbindung getrennt", false);
-                    detail.setText("Bluetooth-Abbruch " + unexpectedDisconnects
-                            + " · GATT-Status " + statusCode + " · neuer Versuch läuft");
-                    connectButton.setText("Bridge verbinden");
+                    historyFailed(I18n.t(R.string.ui_offline_last_loaded_history_80));
+                    showState(I18n.t(R.string.ui_disconnected_81), false);
+                    detail.setText(I18n.t(R.string.ui_bluetooth_disconnect_82) + unexpectedDisconnects
+                            + I18n.t(R.string.ui_gatt_status_83) + statusCode + I18n.t(R.string.ui_retrying_84));
+                    connectButton.setText(I18n.t(R.string.ui_connect_bridge_62));
                     resetButton.setEnabled(false);
                     wifiButton.setEnabled(false);
                     handler.removeCallbacks(managementTimeout);handler.removeCallbacks(reconnect);
@@ -337,7 +340,7 @@ public final class MainActivity extends Activity {
         @Override public void onServiceChanged(BluetoothGatt source) {
             runOnUiThread(()->{
                 if(source!=gatt || !hasBluetoothPermissions())return;
-                historyFailed("Bluetooth-Dienste werden aktualisiert …");notificationsInitialized=false;servicesRecovering=true;managementReading=false;initialStatusPending=false;
+                historyFailed(I18n.t(R.string.ui_refreshing_bluetooth_services_85));notificationsInitialized=false;servicesRecovering=true;managementReading=false;initialStatusPending=false;
                 historyCharacteristic=null;managementCharacteristic=null;espStorage=null;
                 handler.postDelayed(()->{if(source==gatt && servicesRecovering)refreshCachedServices(source);},5000);
                 handler.postDelayed(()->{if(source==gatt)discoverSafely(source);},250);
@@ -356,8 +359,8 @@ public final class MainActivity extends Activity {
             managementCharacteristic=findCharacteristic(source,MANAGEMENT_UUID);
             if (result != BluetoothGatt.GATT_SUCCESS || live == null) {
                 runOnUiThread(() -> {
-                    showState("Bluetooth-Dienste nicht vollständig geladen",false);
-                    detail.setText("Bitte in den Einstellungen die Verbindung erneut herstellen.");
+                    showState(I18n.t(R.string.ui_bluetooth_services_were_not_fully_loaded_86),false);
+                    detail.setText(I18n.t(R.string.ui_reconnect_in_settings_87));
                 });
                 return;
             }
@@ -378,8 +381,8 @@ public final class MainActivity extends Activity {
             if(notificationsInitialized)return;notificationsInitialized=true;
             connected = true;
             runOnUiThread(() -> {
-                showState("●  Live verbunden", true);
-                connectButton.setText("Verbindung trennen");
+                showState(I18n.t(R.string.ui_live_connected_88), true);
+                connectButton.setText(I18n.t(R.string.ui_disconnect_60));
                 resetButton.setEnabled(true);
                 wifiButton.setEnabled(true);
                 historyCacheKey = "history_" + source.getDevice().getAddress();
@@ -387,7 +390,7 @@ public final class MainActivity extends Activity {
                 loadHistoryCache();
                 if(historyCharacteristic==null || managementCharacteristic==null){
                     if(!cacheRefreshAttempted && !servicesRecovering)recoverServices();
-                    else if(!servicesRecovering){historyStatus.setText("Live verbunden, aber Archivdienst fehlt. In Einstellungen die Dienste erneut laden.");updateSettingsAvailability();}
+                    else if(!servicesRecovering){historyStatus.setText(I18n.t(R.string.ui_live_connected_but_the_archive_service_is_missing_reloa_91));updateSettingsAvailability();}
                 }else{
                     servicesRecovering=false;initialStatusPending=true;readManagement();
                 }
@@ -414,7 +417,7 @@ public final class MainActivity extends Activity {
                 controlBusy = false;
                 handler.removeCallbacks(historyTimeout);
                 if (result != BluetoothGatt.GATT_SUCCESS) {
-                    historyFailed("Bluetooth-Schreiben fehlgeschlagen: " + result); return;
+                    historyFailed(I18n.t(R.string.ui_bluetooth_write_failed_93) + result); return;
                 }
                 updateSettingsAvailability();
                 if(lastCommand==0x16){handler.postDelayed(()->refreshCachedServices(source),1800);return;}
@@ -449,6 +452,7 @@ public final class MainActivity extends Activity {
 
     private void parseLiveData(byte[] bytes) {
         if (bytes == null || bytes.length < 16 || bytes[0] < 1 || bytes[0] > 3 || (bytes[0]==3 && bytes.length<20)) return;
+        lastLivePacket=bytes.clone();
         ByteBuffer data = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
         data.get();
         int flags = Byte.toUnsignedInt(data.get());
@@ -465,18 +469,18 @@ public final class MainActivity extends Activity {
         boolean garmin = (flags & 4) != 0;
         boolean garminTrainer = (flags & 8) != 0;
         runOnUiThread(() -> {
-            setMetric(power,String.format(Locale.GERMANY,"%d",watts),"W");
-            setMetric(cadence,String.format(Locale.GERMANY,"%.0f",rpm),"rpm");
-            setMetric(speed,String.format(Locale.GERMANY,"%.1f",kmh),"km/h");
-            setMetric(distance,String.format(Locale.GERMANY,"%.2f",km),"km");
+            setMetric(power,String.format(I18n.locale(),"%d",watts),"W");
+            setMetric(cadence,String.format(I18n.locale(),"%.0f",rpm),"rpm");
+            setMetric(speed,String.format(I18n.locale(),"%.1f",kmh),"km/h");
+            setMetric(distance,String.format(I18n.locale(),"%.2f",km),"km");
             duration.setText(formatDuration(seconds));
-            setMetric(calories,String.format(Locale.GERMANY,"%.0f",kcal),"kcal");
+            setMetric(calories,String.format(I18n.locale(),"%.0f",kcal),"kcal");
             resistance.setText(hasLevel && fresh && bike ? Integer.toString(level):"—");
             bikeLinked=bike;bikeFresh=fresh;garminLinked=garmin;trainerLinked=garminTrainer;updateConnectionIcons();
             String garminState = garminTrainer ? "Garmin Trainer ✓"
-                    : garmin ? "Garmin Power ✓" : "Garmin –";
+                    : garmin ? I18n.t(R.string.ui_garmin_power_105) : "Garmin –";
             detail.setText("Bike " + (bike ? "✓" : "–") + "   ·   "
-                    + garminState + (fresh ? "" : "   ·   keine aktuellen Daten"));
+                    + garminState + (fresh ? "" : I18n.t(R.string.ui_no_recent_data_111)));
         });
     }
 
@@ -492,9 +496,9 @@ public final class MainActivity extends Activity {
     }
     private void updateConnectionIcons() {
         if(bridgeLink==null)return;
-        linkState(bridgeLink,"Bridge",connected?"Verbunden":scanning || gatt!=null?"Verbinden …":"Getrennt",connected?R.color.good:scanning || gatt!=null?R.color.waiting:R.color.muted);
-        linkState(bikeLink,"Bike",!connected?"Unbekannt":bikeLinked?bikeFresh?"Verbunden":"Keine Daten":"Getrennt",connected && bikeLinked?bikeFresh?R.color.good:R.color.waiting:R.color.muted);
-        linkState(garminLink,"Garmin",!connected?"Unbekannt":trainerLinked?"Trainer":garminLinked?"Leistung":"Getrennt",connected && (garminLinked || trainerLinked)?R.color.good:R.color.muted);
+        linkState(bridgeLink,"Bridge",connected?I18n.t(R.string.ui_connected_115):scanning || gatt!=null?I18n.t(R.string.ui_connecting_116):I18n.t(R.string.ui_disconnected_117),connected?R.color.good:scanning || gatt!=null?R.color.waiting:R.color.muted);
+        linkState(bikeLink,"Bike",!connected?I18n.t(R.string.ui_unknown_119):bikeLinked?bikeFresh?I18n.t(R.string.ui_connected_115):I18n.t(R.string.ui_no_data_120):I18n.t(R.string.ui_disconnected_117),connected && bikeLinked?bikeFresh?R.color.good:R.color.waiting:R.color.muted);
+        linkState(garminLink,"Garmin",!connected?I18n.t(R.string.ui_unknown_119):trainerLinked?"Trainer":garminLinked?I18n.t(R.string.ui_power_123):I18n.t(R.string.ui_disconnected_117),connected && (garminLinked || trainerLinked)?R.color.good:R.color.muted);
     }
 
     private static String formatDuration(long seconds) {
@@ -502,17 +506,17 @@ public final class MainActivity extends Activity {
         long minutes = (seconds % 3600) / 60;
         long rest = seconds % 60;
         return hours > 0
-                ? String.format(Locale.GERMANY, "%d:%02d:%02d", hours, minutes, rest)
-                : String.format(Locale.GERMANY, "%02d:%02d", minutes, rest);
+                ? String.format(I18n.locale(), "%d:%02d:%02d", hours, minutes, rest)
+                : String.format(I18n.locale(), "%02d:%02d", minutes, rest);
     }
 
     private void resetSession() {
-        sendControl((byte) 1, "Sitzung wird auf dem ESP gespeichert");
+        sendControl((byte) 1, I18n.t(R.string.ui_saving_session_on_the_esp_126));
     }
 
     private void sendControl(byte commandValue, String confirmation) {
         if (historyLoading || controlBusy) {
-            AppDialog.notice(this,"Bitte die Bluetooth-Übertragung abwarten");
+            AppDialog.notice(this,I18n.t(R.string.ui_please_wait_for_the_bluetooth_transfer_127));
             return;
         }
         if (writeCommand(new byte[]{commandValue}))
@@ -533,7 +537,7 @@ public final class MainActivity extends Activity {
         }
         controlBusy = accepted;updateSettingsAvailability();
         if (accepted) armHistoryTimeout();
-        else historyFailed("Bluetooth ist beschäftigt. Bitte erneut laden.");
+        else historyFailed(I18n.t(R.string.ui_bluetooth_is_busy_please_try_loading_again_128));
         return accepted;
     }
 
@@ -552,43 +556,44 @@ public final class MainActivity extends Activity {
     private void setupHistory() {
         LinearLayout section=findViewById(R.id.historySection),settings=findViewById(R.id.espSection);
         LinearLayout heading=new LinearLayout(this);heading.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        TextView headingText=historyText("Deine Aktivitäten",26);headingText.setPadding(0,dp(8),0,dp(8));heading.addView(headingText,new LinearLayout.LayoutParams(0,-2,1));
-        historyRefresh=new android.widget.ImageButton(this);historyRefresh.setImageResource(R.drawable.nav_sync);historyRefresh.setImageTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.accent)));historyRefresh.setContentDescription("Historie synchronisieren");historyRefresh.setTooltipText("Synchronisieren");historyRefresh.setBackgroundResource(android.R.drawable.list_selector_background);heading.addView(historyRefresh,new LinearLayout.LayoutParams(dp(48),dp(48)));historyRefresh.setOnClickListener(v->refreshHistory());section.addView(heading);
-        LinearLayout appearance=settingsGroup(settings,"Darstellung");moveSettingRow(themeButton,appearance);
-        LinearLayout links=settingsGroup(settings,"Verbindung");moveSettingRow(connectButton,links);moveSettingRow(wifiButton,links);
-        historyStatus=historyText("Gespeicherte Trainings",13);historyStatus.setTextColor(getColor(R.color.muted));section.addView(historyStatus);
+        TextView headingText=historyText(I18n.t(R.string.ui_your_activities_129),26);headingText.setPadding(0,dp(8),0,dp(8));heading.addView(headingText,new LinearLayout.LayoutParams(0,-2,1));
+        historyRefresh=new android.widget.ImageButton(this);historyRefresh.setImageResource(R.drawable.nav_sync);historyRefresh.setImageTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.accent)));historyRefresh.setContentDescription(I18n.t(R.string.ui_synchronize_history_130));historyRefresh.setTooltipText(I18n.t(R.string.ui_synchronize_131));historyRefresh.setBackgroundResource(android.R.drawable.list_selector_background);heading.addView(historyRefresh,new LinearLayout.LayoutParams(dp(48),dp(48)));historyRefresh.setOnClickListener(v->refreshHistory());section.addView(heading);
+        LinearLayout appearance=settingsGroup(settings,I18n.t(R.string.ui_appearance_132));moveSettingRow(themeButton,appearance);
+        action(appearance,I18n.t(R.string.language_setting,"de".equals(I18n.locale().getLanguage())?"Deutsch":"English"),this::chooseLanguage);
+        LinearLayout links=settingsGroup(settings,I18n.t(R.string.ui_connection_133));moveSettingRow(connectButton,links);moveSettingRow(wifiButton,links);
+        historyStatus=historyText(I18n.t(R.string.ui_saved_workouts_134),13);historyStatus.setTextColor(getColor(R.color.muted));section.addView(historyStatus);
         historyDevice=new Spinner(this);historyDevice.setVisibility(View.GONE);section.addView(historyDevice);
         historyCards=new LinearLayout(this);historyCards.setOrientation(LinearLayout.VERTICAL);section.addView(historyCards);
         historyCacheKey=getSharedPreferences("display",MODE_PRIVATE).getString("lastHistory","history");loadHistoryCache();
-        LinearLayout connection=settingsGroup(settings,"Bridge-Status");
-        settingsState=historyText("Bridge verbinden, um Geräteeinstellungen zu laden.",13);connection.addView(settingsState);
-        statusRefresh=action(connection,"Status aktualisieren",()->{if(connected && !historyLoading && !controlBusy){if(managementCharacteristic==null){cacheRefreshAttempted=false;recoverServices();}else readManagement();}});
-        LinearLayout pulse=settingsGroup(settings,"Live-Puls · Fenix / Bluetooth-Sensor");
-        heartRateStatus=historyText("Noch kein Pulssensor ausgewählt",13);pulse.addView(heartRateStatus);
-        pulse.addView(historyText("Auf der Fenix: Einstellungen → Gesundheit und Wellness → Herzfrequenz am Handgelenk → Herzfrequenz senden. Während Aktivitäten auch automatisch möglich.",12));
-        action(pulse,"Pulssensor suchen",this::chooseHeartRateSensor);
-        action(pulse,"Puls erneut verbinden",()->heartRateClient.reconnectSaved());
-        action(pulse,"Pulsverbindung trennen",()->heartRateClient.disconnect());
-        pulse.addView(historyText("Direkt zur App · Puls nur live, noch nicht im Trainingsarchiv. Die Bridge zeichnet auch ohne Handy weiter auf.",12));
-        LinearLayout recording=settingsGroup(settings,"Aufzeichnung");
-        recordingControl=new Switch(this);recordingControl.setText("Sekundenwerte speichern");recordingControl.setTextColor(getColor(R.color.ink));recordingControl.setPadding(dp(12),dp(10),dp(12),dp(10));recording.addView(recordingControl);
-        recording.addView(historyText("Training automatisch abschließen nach",13));
-        String[] minutes=new String[30];for(int i=0;i<30;i++)minutes[i]=(i+1)+" Minuten ohne Bewegung";
+        LinearLayout connection=settingsGroup(settings,I18n.t(R.string.ui_bridge_status_135));
+        settingsState=historyText(I18n.t(R.string.ui_connect_the_bridge_to_load_device_settings_136),13);connection.addView(settingsState);
+        statusRefresh=action(connection,I18n.t(R.string.ui_refresh_status_137),()->{if(connected && !historyLoading && !controlBusy){if(managementCharacteristic==null){cacheRefreshAttempted=false;recoverServices();}else readManagement();}});
+        LinearLayout pulse=settingsGroup(settings,I18n.t(R.string.ui_live_heart_rate_fenix_bluetooth_sensor_138));
+        heartRateStatus=historyText(I18n.t(R.string.ui_no_heart_rate_sensor_selected_yet_10),13);pulse.addView(heartRateStatus);
+        pulse.addView(historyText(I18n.t(R.string.ui_on_your_fenix_settings_health_wellness_wrist_heart_rate_139),12));
+        action(pulse,I18n.t(R.string.ui_find_heart_rate_sensor_140),this::chooseHeartRateSensor);
+        action(pulse,I18n.t(R.string.ui_reconnect_heart_rate_sensor_141),()->heartRateClient.reconnectSaved());
+        action(pulse,I18n.t(R.string.ui_disconnect_heart_rate_sensor_142),()->heartRateClient.disconnect());
+        pulse.addView(historyText(I18n.t(R.string.ui_direct_to_the_app_heart_rate_is_live_only_and_is_not_ye_143),12));
+        LinearLayout recording=settingsGroup(settings,I18n.t(R.string.ui_recording_144));
+        recordingControl=new Switch(this);recordingControl.setText(I18n.t(R.string.ui_save_per_second_data_145));recordingControl.setTextColor(getColor(R.color.ink));recordingControl.setPadding(dp(12),dp(10),dp(12),dp(10));recording.addView(recordingControl);
+        recording.addView(historyText(I18n.t(R.string.ui_automatically_finish_workout_after_146),13));
+        String[] minutes=new String[30];for(int i=0;i<30;i++)minutes[i]=(i+1)+I18n.t(R.string.ui_minutes_without_movement_147);
         idleControl=AppDialog.spinner(this,minutes);recording.addView(idleControl);
-        LinearLayout led=settingsGroup(settings,"Statuslicht");
-        brightnessLabel=historyText("Helligkeit",14);led.addView(brightnessLabel);
+        LinearLayout led=settingsGroup(settings,I18n.t(R.string.ui_status_light_148));
+        brightnessLabel=historyText(I18n.t(R.string.ui_brightness_149),14);led.addView(brightnessLabel);
         brightnessControl=new SeekBar(this);brightnessControl.setMax(100);led.addView(brightnessControl);
-        patternControl=AppDialog.spinner(this,new String[]{"Verbindungsstatus","Kurzer Impuls","Doppelimpuls","Aus"});led.addView(patternControl);
-        led.addView(historyText("Einfarbige LED · die separate Stromanzeige bleibt unverändert.",12));
-        saveSettings=action(settings,"Änderungen speichern",this::saveEspSettings);saveSettings.setBackgroundResource(R.drawable.primary_button);saveSettings.setTextColor(getColor(R.color.accent_ink));saveSettings.setGravity(android.view.Gravity.CENTER);
+        patternControl=AppDialog.spinner(this,new String[]{I18n.t(R.string.ui_connection_status_150),I18n.t(R.string.ui_short_pulse_151),I18n.t(R.string.ui_double_pulse_152),I18n.t(R.string.ui_off_153)});led.addView(patternControl);
+        led.addView(historyText(I18n.t(R.string.ui_single_color_led_the_separate_power_indicator_is_unaffe_154),12));
+        saveSettings=action(settings,I18n.t(R.string.ui_save_changes_155),this::saveEspSettings);saveSettings.setBackgroundResource(R.drawable.primary_button);saveSettings.setTextColor(getColor(R.color.accent_ink));saveSettings.setGravity(android.view.Gravity.CENTER);
         recordingControl.setOnCheckedChangeListener((v,checked)->{if(!settingUi){settingsDirty=true;updateSettingsAvailability();}});
-        brightnessControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar b,int value,boolean user){brightnessLabel.setText("Helligkeit · "+value+" %");if(user){settingsDirty=true;updateSettingsAvailability();}}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});
+        brightnessControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar b,int value,boolean user){brightnessLabel.setText(I18n.t(R.string.ui_brightness_156)+value+" %");if(user){settingsDirty=true;updateSettingsAvailability();}}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});
         AdapterView.OnItemSelectedListener changed=new AdapterView.OnItemSelectedListener(){public void onItemSelected(AdapterView<?> p,View v,int i,long id){if(!settingUi && espStorage!=null){settingsDirty= settingsDirty || patternControl.getSelectedItemPosition()!=espStorage.optInt("ledPattern") || idleControl.getSelectedItemPosition()!=espStorage.optInt("idleMinutes",5)-1;}}public void onNothingSelected(AdapterView<?> p){}};
         patternControl.setOnItemSelectedListener(changed);idleControl.setOnItemSelectedListener(changed);
-        LinearLayout memory=settingsGroup(settings,"Speicher & Sicherung");storageInfo=historyText("Speicher wird nach dem Verbinden geladen.",13);memory.addView(storageInfo);importInfo=historyText("",12);memory.addView(importInfo);
-        action(memory,"Archiv als ZIP sichern",()->startActivityForResult(new Intent(Intent.ACTION_CREATE_DOCUMENT).setType("application/zip").addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE,"PedalBridge-Archiv.zip"),81));
-        action(memory,"Trainingsdatei importieren",()->startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*"),82));
-        settings.addView(historyText("PedalBridge Display · Version 0.9.2",12));
+        LinearLayout memory=settingsGroup(settings,I18n.t(R.string.ui_storage_backup_160));storageInfo=historyText(I18n.t(R.string.ui_storage_details_load_after_connecting_161),13);memory.addView(storageInfo);importInfo=historyText("",12);memory.addView(importInfo);
+        action(memory,I18n.t(R.string.ui_back_up_archive_as_zip_162),()->startActivityForResult(new Intent(Intent.ACTION_CREATE_DOCUMENT).setType("application/zip").addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE,I18n.t(R.string.ui_pedalbridge_archive_zip_164)),81));
+        action(memory,I18n.t(R.string.ui_import_workout_file_165),()->startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*"),82));
+        settings.addView(historyText("PedalBridge Display · Version 0.10.0",12));
         updateSettingsAvailability();
     }
     private void setupTabs() {
@@ -645,11 +650,11 @@ public final class MainActivity extends Activity {
         boolean editable=available && !controlBusy && !managementReading;brightnessControl.setEnabled(editable);patternControl.setEnabled(editable);idleControl.setEnabled(editable);recordingControl.setEnabled(editable);
         wifiButton.setEnabled(available && !historyLoading && !controlBusy && !managementReading);
         saveSettings.setAlpha(saveSettings.isEnabled()?1f:.45f);wifiButton.setAlpha(wifiButton.isEnabled()?1f:.45f);
-        if(!connected)settingsState.setText("Offline · Darstellung und Archiv sind weiterhin verfügbar."+(unexpectedDisconnects==0?"":"\n"+unexpectedDisconnects+" Verbindungsabbrüche · letzter GATT-Status "+lastDisconnectStatus));
+        if(!connected)settingsState.setText(I18n.t(R.string.ui_offline_appearance_and_archive_remain_available_169)+(unexpectedDisconnects==0?"":"\n"+unexpectedDisconnects+I18n.t(R.string.ui_disconnects_last_gatt_status_170)+lastDisconnectStatus));
         else if(!settingsError.isEmpty())settingsState.setText(settingsError);
-        else if(servicesRecovering)settingsState.setText("Bluetooth-Dienste werden neu geladen …");
-        else if(!available)settingsState.setText("Verbunden · Geräteeinstellungen werden geladen …");
-        else settingsState.setText((unexpectedDisconnects==0?"":unexpectedDisconnects+" Verbindungsabbrüche · letzter GATT-Status "+lastDisconnectStatus+"\n")+(historyLoading?"Verbunden · Archiv wird synchronisiert. Speichern ist danach möglich.":settingsDirty?"Ungespeicherte Änderungen":"Verbunden · Geräteeinstellungen aktuell"));
+        else if(servicesRecovering)settingsState.setText(I18n.t(R.string.ui_reloading_bluetooth_services_171));
+        else if(!available)settingsState.setText(I18n.t(R.string.ui_connected_loading_device_settings_172));
+        else settingsState.setText((unexpectedDisconnects==0?"":unexpectedDisconnects+I18n.t(R.string.ui_disconnects_last_gatt_status_170)+lastDisconnectStatus+"\n")+(historyLoading?I18n.t(R.string.ui_connected_synchronizing_archive_settings_can_be_saved_a_173):settingsDirty?I18n.t(R.string.ui_unsaved_changes_174):I18n.t(R.string.ui_connected_device_settings_up_to_date_175)));
     }
     private void saveEspSettings() {
         if(!connected || espStorage==null || historyLoading || controlBusy || managementReading){updateSettingsAvailability();return;}
@@ -667,22 +672,22 @@ public final class MainActivity extends Activity {
     private void loadHistoryCache() {
         try {
             JSONObject saved=archiveDb.load(historyCacheKey);
-            if(saved!=null) {showHistory(saved); historyStatus.setText("Lokales Archiv · "+cacheDate());return;}
-        } catch(Exception e) { historyStatus.setText("Lokales Archiv nicht lesbar: "+e.getMessage()); }
+            if(saved!=null) {showHistory(saved); historyStatus.setText(I18n.t(R.string.ui_local_archive_176)+cacheDate());return;}
+        } catch(Exception e) { historyStatus.setText(I18n.t(R.string.ui_cannot_read_local_archive_177)+e.getMessage()); }
         String cached = getSharedPreferences("display", MODE_PRIVATE).getString(historyCacheKey, null);
         if (cached == null) {
             historyJson = null; historyCards.removeAllViews();
             historyDevice.setAdapter(null);
-            historyStatus.setText("Noch kein ESP-Archiv geladen"); renderHistory(0); return;
+            historyStatus.setText(I18n.t(R.string.ui_no_esp_archive_loaded_yet_178)); renderHistory(0); return;
         }
         try { JSONObject old=new JSONObject(cached); archiveDb.savePage(historyCacheKey,old);
-            showHistory(old); historyStatus.setText("Gespeicherter Stand · " + cacheDate()); }
-        catch (JSONException e) { historyStatus.setText("Gespeicherte Historie nicht lesbar. Bitte neu laden."); }
+            showHistory(old); historyStatus.setText(I18n.t(R.string.ui_saved_snapshot_179) + cacheDate()); }
+        catch (JSONException e) { historyStatus.setText(I18n.t(R.string.ui_cannot_read_saved_history_please_load_again_180)); }
     }
 
     private String cacheDate() {
         long saved = getSharedPreferences("display", MODE_PRIVATE).getLong(historyCacheKey + "_time", 0);
-        return saved == 0 ? "Datum unbekannt" : DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date(saved));
+        return saved == 0 ? I18n.t(R.string.ui_date_unknown_182) : DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,I18n.locale()).format(new Date(saved));
     }
 
     private void armHistoryTimeout() {
@@ -700,14 +705,14 @@ public final class MainActivity extends Activity {
     private void refreshHistory() {
         if (historyLoading || controlBusy || managementReading || servicesRecovering) return;
         if (!connected || historyCharacteristic == null) {
-            if(connected){cacheRefreshAttempted=false;recoverServices();}else historyStatus.setText("Offline · " + cacheDate()); return;
+            if(connected){cacheRefreshAttempted=false;recoverServices();}else historyStatus.setText(I18n.t(R.string.ui_offline_183) + cacheDate()); return;
         }
         historyLoading = true; historyRefresh.setEnabled(false);updateSettingsAvailability();
         historyBefore=0; rawSync=false; importSync=false; pendingImportBytes=0; rawQueue=new JSONArray();
         historyBytes.reset(); historyOffset = 0; historyTotal = 0; historyRetries = 0;
         historyTransfer = (historyTransfer + 1) & 0xffff;
         if (historyTransfer == 0) historyTransfer = 1;
-        historyStatus.setText("Historie wird über Bluetooth geladen …");
+        historyStatus.setText(I18n.t(R.string.ui_loading_history_over_bluetooth_184));
         requestHistoryPage();
     }
 
@@ -717,55 +722,55 @@ public final class MainActivity extends Activity {
         requestData.put((byte)(importSync?0x15:rawSync?0x11:historyBefore>0?0x14:0x10)).putShort((short)historyTransfer).putInt(historyOffset);
         if(rawSync || importSync || historyBefore>0) requestData.putInt(importSync?0:rawSync?(int)rawSessionId:historyBefore);
         byte[] request=requestData.array();
-        if (!writeCommand(request)) historyFailed("Historie konnte nicht angefordert werden");
+        if (!writeCommand(request)) historyFailed(I18n.t(R.string.ui_could_not_request_history_185));
     }
 
     private void readHistoryPage() {
         if (!historyLoading || gatt == null || historyCharacteristic == null || !(checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)) return;
         armHistoryTimeout();
-        if (!gatt.readCharacteristic(historyCharacteristic)) historyFailed("Bluetooth-Lesen konnte nicht gestartet werden");
+        if (!gatt.readCharacteristic(historyCharacteristic)) historyFailed(I18n.t(R.string.ui_could_not_start_bluetooth_read_186));
     }
 
     private void receiveHistory(byte[] bytes, int result) {
         if (!historyLoading) return;
         handler.removeCallbacks(historyTimeout);
         if (result != BluetoothGatt.GATT_SUCCESS || bytes == null || bytes.length < 10) {
-            historyFailed("Historie konnte nicht gelesen werden: " + result); return;
+            historyFailed(I18n.t(R.string.ui_could_not_read_history_187) + result); return;
         }
         ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
         int transfer = Short.toUnsignedInt(buffer.getShort());
         int offset = buffer.getInt(), total = buffer.getInt();
         if (transfer != historyTransfer || offset != historyOffset) {
-            if (++historyRetries > 100) { historyFailed("ESP antwortet noch nicht. Bitte erneut versuchen."); return; }
+            if (++historyRetries > 100) { historyFailed(I18n.t(R.string.ui_esp_is_not_responding_yet_please_try_again_188)); return; }
             handler.postDelayed(this::readHistoryPage, 200); return;
         }
         if(rawSync && total==0) { rawIndex++; nextRawFile(); return; }
         if (total <= 0 || total > ((rawSync||importSync)?2_000_000:160_000) || (historyOffset > 0 && total != historyTotal)
                 || bytes.length == 10 || offset + bytes.length - 10 > total) {
-            historyFailed("Unvollständige Historien-Daten"); return;
+            historyFailed(I18n.t(R.string.ui_incomplete_history_data_189)); return;
         }
         historyRetries = 0; historyTotal = total;
         historyBytes.write(bytes, 10, bytes.length - 10);
         historyOffset += bytes.length - 10;
-        historyStatus.setText((importSync?"MyBodytone-Import":rawSync?"Messverlauf "+(rawIndex+1)+"/"+rawQueue.length():"Historie laden")+" · " + (historyOffset*100/total) + " %");
+        historyStatus.setText((importSync?I18n.t(R.string.ui_mybodytone_import_190):rawSync?I18n.t(R.string.ui_recording_191)+(rawIndex+1)+"/"+rawQueue.length():I18n.t(R.string.ui_load_history_193))+" · " + (historyOffset*100/total) + " %");
         if (historyOffset < total) { requestHistoryPage(); return; }
         if(importSync) { storeTransferredImport(); return; }
         if(rawSync) { storeRawAndAcknowledge(); return; }
         try {
             String json = new String(historyBytes.toByteArray(), StandardCharsets.UTF_8);
             JSONObject parsed = new JSONObject(json);
-            if (parsed.getInt("version") != 1 && parsed.getInt("version") != 2) throw new JSONException("Version");
+            if (parsed.getInt("version") != 1 && parsed.getInt("version") != 2) throw new JSONException(I18n.t(R.string.ui_version_196));
             activeArchive=parsed.optString("archiveId",historyCacheKey);
             archiveDb.savePage(historyCacheKey,parsed);
             if(historyBefore==0) {
                 pendingImportBytes=parsed.optInt("importBytes",0);pendingImportChecksum=parsed.optLong("importChecksum",0);
-                importInfo.setText(pendingImportBytes>0?String.format(Locale.GERMANY,"Importdatei auf der Bridge: %.1f KiB · Trainings erscheinen im gemeinsamen Verlauf",pendingImportBytes/1024.0):"Keine zusätzliche Importdatei auf der Bridge");
+                importInfo.setText(pendingImportBytes>0?String.format(I18n.locale(),I18n.t(R.string.ui_import_file_on_bridge_1f_kib_workouts_appear_in_the_com_200),pendingImportBytes/1024.0):I18n.t(R.string.ui_no_additional_import_file_on_bridge_201));
             }
             if(historyBefore==0) rawQueue=parsed.optJSONArray("rawFiles")==null?new JSONArray():parsed.getJSONArray("rawFiles");
             if(parsed.has("storage")) updateStorage(parsed.getJSONObject("storage"));
             if(parsed.optBoolean("hasMore")) {
                 int next=parsed.getInt("nextBefore");
-                if(next<=0 || (historyBefore>0 && next>=historyBefore)) throw new JSONException("Seitenreihenfolge");
+                if(next<=0 || (historyBefore>0 && next>=historyBefore)) throw new JSONException(I18n.t(R.string.ui_page_order_206));
                 historyBefore=next; resetTransfer(); requestHistoryPage(); return;
             }
             JSONObject complete=archiveDb.load(historyCacheKey);
@@ -773,10 +778,10 @@ public final class MainActivity extends Activity {
             getSharedPreferences("display", MODE_PRIVATE).edit().putString(historyCacheKey, json)
                     .putLong(historyCacheKey + "_time", System.currentTimeMillis()).apply();
             historyStatus.setText(parsed.optString("error").isEmpty()
-                    ? "Aktualisiert · " + cacheDate() : "ESP: " + parsed.optString("error"));
+                    ? I18n.t(R.string.ui_updated_208) + cacheDate() : "ESP: " + parsed.optString("error"));
             if(!parsed.optString("error").isEmpty()) {historyFailed("ESP: "+parsed.optString("error")); return;}
             rawIndex=0; nextRawFile();
-        } catch (Exception e) { historyFailed("Historie konnte nicht archiviert werden: "+e.getMessage()); }
+        } catch (Exception e) { historyFailed(I18n.t(R.string.ui_could_not_archive_history_210)+e.getMessage()); }
     }
 
     private void resetTransfer() {
@@ -785,44 +790,44 @@ public final class MainActivity extends Activity {
     }
 
     private void nextRawFile() {
-        if(!connected || gatt==null) {historyFailed("Offline · gespeicherte Daten bleiben erhalten");return;}
+        if(!connected || gatt==null) {historyFailed(I18n.t(R.string.ui_offline_saved_data_is_preserved_211));return;}
         if(rawIndex>=rawQueue.length()) {
             if(pendingImportBytes>0 && !archiveDb.hasImport(pendingImportChecksum)) {
                 importSync=true;rawSync=false;historyLoading=true;resetTransfer();requestHistoryPage();return;
             }
             lastSuccessfulSyncMs=android.os.SystemClock.elapsedRealtime();
             rawSync=false; historyLoading=false; historyRefresh.setEnabled(true);updateSettingsAvailability();
-            historyStatus.setText("Archiv synchronisiert · "+cacheDate());
+            historyStatus.setText(I18n.t(R.string.ui_archive_synchronized_212)+cacheDate());
             try {JSONObject latest=archiveDb.load(historyCacheKey); if(latest!=null) showHistory(latest);}catch(Exception ignored) { }
             readManagement(); return;
         }
         JSONObject item=rawQueue.optJSONObject(rawIndex);
-        if(item==null) {historyFailed("Ungültige Messdateiliste");return;}
+        if(item==null) {historyFailed(I18n.t(R.string.ui_invalid_recording_file_list_213));return;}
         rawSessionId=item.optLong("id",0);
-        if(rawSessionId<=0) {historyFailed("Ungültige Sitzungskennung");return;}
+        if(rawSessionId<=0) {historyFailed(I18n.t(R.string.ui_invalid_session_id_215));return;}
         rawSync=true; historyLoading=true; resetTransfer(); requestHistoryPage();
     }
 
     private void storeTransferredImport() {
         byte[] bytes=historyBytes.toByteArray();
-        if(bytes.length!=pendingImportBytes || TrainingDatabase.checksum(bytes)!=pendingImportChecksum) {historyFailed("Import-Prüfsumme stimmt nicht; bitte erneut synchronisieren");return;}
+        if(bytes.length!=pendingImportBytes || TrainingDatabase.checksum(bytes)!=pendingImportChecksum) {historyFailed(I18n.t(R.string.ui_import_checksum_mismatch_please_synchronize_again_216));return;}
         final BluetoothGatt source=gatt;
         archiveIo.execute(()->{
             try {
                 archiveDb.importBodytone(bytes);
                 handler.post(()->{if(source!=gatt || !historyLoading)return;importSync=false;pendingImportBytes=0;nextRawFile();renderHistory(0);});
-            }catch(Exception e){handler.post(()->historyFailed("Import fehlgeschlagen: "+e.getMessage()));}
+            }catch(Exception e){handler.post(()->historyFailed(I18n.t(R.string.ui_import_failed_217)+e.getMessage()));}
         });
     }
     private void storeRawAndAcknowledge() {
         byte[] bytes=historyBytes.toByteArray();
-        if(bytes.length<16 || (bytes.length-16)%24!=0) {historyFailed("Messdatei ist unvollständig; bleibt auf dem ESP");return;}
+        if(bytes.length<16 || (bytes.length-16)%24!=0) {historyFailed(I18n.t(R.string.ui_recording_file_is_incomplete_retained_on_esp_218));return;}
         ByteBuffer h=ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
         if(h.getInt()!=0x31574152 || Integer.toUnsignedLong(h.getInt())!=rawSessionId
-                || Short.toUnsignedInt(h.getShort(12))!=24) {historyFailed("Unbekanntes Messformat; bleibt auf dem ESP");return;}
+                || Short.toUnsignedInt(h.getShort(12))!=24) {historyFailed(I18n.t(R.string.ui_unknown_recording_format_retained_on_esp_219));return;}
         final BluetoothGatt source=gatt; final long id=rawSessionId;
         final String archive=activeArchive; final long checksum=TrainingDatabase.checksum(bytes);
-        historyStatus.setText("Messverlauf wird dauerhaft gespeichert …");
+        historyStatus.setText(I18n.t(R.string.ui_saving_recording_permanently_220));
         archiveIo.execute(()->{
             try {
                 archiveDb.saveRaw(archive,id,bytes,checksum);
@@ -831,21 +836,21 @@ public final class MainActivity extends Activity {
                     awaitingAck=true; ackRetries=0;
                     byte[] ack=ByteBuffer.allocate(13).order(ByteOrder.LITTLE_ENDIAN)
                             .put((byte)0x12).putInt((int)id).putInt(bytes.length).putInt((int)checksum).array();
-                    if(!writeCommand(ack)) historyFailed("Verlauf gespeichert; Freigabe auf ESP wird beim nächsten Sync wiederholt");
+                    if(!writeCommand(ack)) historyFailed(I18n.t(R.string.ui_recording_saved_esp_cleanup_will_be_retried_on_the_next_221));
                 });
-            } catch(Exception e) {handler.post(()->historyFailed("Speichern fehlgeschlagen; ESP behält Verlauf: "+e.getMessage()));}
+            } catch(Exception e) {handler.post(()->historyFailed(I18n.t(R.string.ui_save_failed_esp_retains_recording_222)+e.getMessage()));}
         });
     }
 
     private final Runnable managementTimeout=()->{
-        managementReading=false;settingsError="Gerätestatus konnte nicht geladen werden. Bitte Status aktualisieren.";updateSettingsAvailability();
-        if(awaitingAck)historyFailed("Verlauf gespeichert; Bestätigung fehlt");
+        managementReading=false;settingsError=I18n.t(R.string.ui_could_not_load_device_status_please_refresh_status_223);updateSettingsAvailability();
+        if(awaitingAck)historyFailed(I18n.t(R.string.ui_recording_saved_confirmation_missing_224));
         if(initialStatusPending){initialStatusPending=false;beginArchiveSync();}
     };
     private void readManagement() {
         if(gatt==null || managementCharacteristic==null || controlBusy || managementReading || checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT)!=PackageManager.PERMISSION_GRANTED)return;
         settingsError="";managementReading=true;handler.removeCallbacks(managementTimeout);handler.postDelayed(managementTimeout,8000);
-        if(!gatt.readCharacteristic(managementCharacteristic)){managementReading=false;handler.removeCallbacks(managementTimeout);settingsState.setText("Bluetooth ist beschäftigt. Status erneut laden.");if(awaitingAck)historyFailed("Verlauf gespeichert; Bestätigung konnte nicht gelesen werden");}
+        if(!gatt.readCharacteristic(managementCharacteristic)){managementReading=false;handler.removeCallbacks(managementTimeout);settingsState.setText(I18n.t(R.string.ui_bluetooth_is_busy_refresh_status_again_225));if(awaitingAck)historyFailed(I18n.t(R.string.ui_recording_saved_could_not_read_confirmation_226));}
         updateSettingsAvailability();
     }
 
@@ -858,13 +863,13 @@ public final class MainActivity extends Activity {
             updateStorage(info);
             if(awaitingAck) {
                 if(info.optLong("lastAck")!=rawSessionId) {
-                    if(++ackRetries>100) {historyFailed("Verlauf gesichert; ESP-Freigabe nicht bestätigt");return;}
+                    if(++ackRetries>100) {historyFailed(I18n.t(R.string.ui_recording_backed_up_esp_cleanup_not_confirmed_229));return;}
                     handler.postDelayed(this::readManagement,200);return;
                 }
-                if(!info.optBoolean("lastAckOk")) {historyFailed("Verlauf gesichert; ESP hat Löschung nicht bestätigt");return;}
+                if(!info.optBoolean("lastAckOk")) {historyFailed(I18n.t(R.string.ui_recording_backed_up_esp_did_not_confirm_deletion_231));return;}
                 awaitingAck=false; rawIndex++; nextRawFile();
             }
-        } catch(Exception e) {settingsError="Gerätestatus nicht lesbar. Verbindung erneut prüfen.";if(awaitingAck)historyFailed("ESP-Status nicht lesbar; lokale Sicherung bleibt erhalten");}
+        } catch(Exception e) {settingsError=I18n.t(R.string.ui_cannot_read_device_status_check_the_connection_again_232);if(awaitingAck)historyFailed(I18n.t(R.string.ui_cannot_read_esp_status_local_backup_is_preserved_233));}
         updateSettingsAvailability();
         if(initialStatusPending){initialStatusPending=false;beginArchiveSync();}
     }
@@ -872,15 +877,15 @@ public final class MainActivity extends Activity {
     private void updateStorage(JSONObject info) {
         settingsError="";espStorage=info;
         if(brightnessControl!=null && !settingsDirty){settingUi=true;brightnessControl.setProgress(info.optInt("ledBrightness",20));patternControl.setSelection(info.optInt("ledPattern",0));idleControl.setSelection(Math.max(0,info.optInt("idleMinutes",5)-1));recordingControl.setChecked(info.optBoolean("recordSeconds",true));settingUi=false;}
-        wifiButton.setText(info.optBoolean("wifi")?"Konfigurations-WLAN ausschalten":"Konfigurations-WLAN einschalten");
+        wifiButton.setText(info.optBoolean("wifi")?I18n.t(R.string.ui_turn_off_setup_wi_fi_236):I18n.t(R.string.ui_turn_on_setup_wi_fi_237));
         updateSettingsAvailability();
         if(storageInfo==null) return;
         double total=info.optDouble("total"),used=info.optDouble("used"),free=info.optDouble("free");
         double hours=Math.max(0,free-info.optDouble("reserve"))/(24*3600);
-        storageInfo.setText(String.format(Locale.GERMANY,
-                "%.0f von %.0f KiB belegt · %.0f KiB frei\n%d Trainings · %d Messverläufe auf der Bridge\nNoch etwa %.1f Stunden Sekundenwerte\n%d ältere Verläufe automatisch freigegeben%s",
+        storageInfo.setText(String.format(I18n.locale(),
+                I18n.t(R.string.ui_0f_of_0f_kib_used_0f_kib_free_d_workouts_d_recordings_o_242),
                 used/1024,total/1024,free/1024,info.optInt("summaries"),info.optInt("rawSessions"),hours,
-                info.optInt("evictedRaw"),info.optBoolean("rawPaused")?"\nSekundenaufzeichnung pausiert: Speicher voll":""));
+                info.optInt("evictedRaw"),info.optBoolean("rawPaused")?I18n.t(R.string.ui_per_second_recording_paused_storage_full_247):""));
     }
 
     @Override protected void onActivityResult(int request,int result,Intent data) {
@@ -889,22 +894,22 @@ public final class MainActivity extends Activity {
             android.net.Uri importUri=data.getData();
             archiveIo.execute(()->{
                 try(java.io.InputStream input=getContentResolver().openInputStream(importUri)) {
-                    if(input==null)throw new java.io.IOException("Datei nicht geöffnet");
+                    if(input==null)throw new java.io.IOException(I18n.t(R.string.ui_file_not_opened_248));
                     ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] block=new byte[8192];int n;
-                    while((n=input.read(block))!=-1){out.write(block,0,n);if(out.size()>2_000_000)throw new java.io.IOException("Importdatei zu groß (max. 2 MB)");}
+                    while((n=input.read(block))!=-1){out.write(block,0,n);if(out.size()>2_000_000)throw new java.io.IOException(I18n.t(R.string.ui_import_file_too_large_max_2_mb_249));}
                     int added=archiveDb.importBodytone(out.toByteArray());
-                    handler.post(()->{selectTab(1);renderHistory(0);AppDialog.notice(this,added+" Trainings neu importiert");});
-                }catch(Exception e){handler.post(()->AppDialog.notice(this,"Import fehlgeschlagen: "+e.getMessage()));}
+                    handler.post(()->{selectTab(1);renderHistory(0);AppDialog.notice(this,added+I18n.t(R.string.ui_new_workouts_imported_250));});
+                }catch(Exception e){handler.post(()->AppDialog.notice(this,I18n.t(R.string.ui_import_failed_217)+e.getMessage()));}
             });return;
         }
         if(request!=81 || result!=RESULT_OK || data==null || data.getData()==null) return;
         android.net.Uri uri=data.getData();
         archiveIo.execute(()->{
             try(java.io.OutputStream output=getContentResolver().openOutputStream(uri)) {
-                if(output==null) throw new java.io.IOException("Datei nicht geöffnet");
+                if(output==null) throw new java.io.IOException(I18n.t(R.string.ui_file_not_opened_248));
                 archiveDb.exportZip(output);
-                handler.post(()->AppDialog.notice(this,"Archiv einschließlich Messverläufen gesichert"));
-            } catch(Exception e) {handler.post(()->AppDialog.notice(this,"Sicherung fehlgeschlagen: "+e.getMessage()));}
+                handler.post(()->AppDialog.notice(this,I18n.t(R.string.ui_archive_backed_up_including_recordings_251)));
+            } catch(Exception e) {handler.post(()->AppDialog.notice(this,I18n.t(R.string.ui_backup_failed_252)+e.getMessage()));}
         });
     }
 
@@ -925,18 +930,18 @@ public final class MainActivity extends Activity {
     }
 
     private static String metric(JSONObject stats, String key, String unit) {
-        return stats.isNull(key) || !stats.has(key) ? "—" : String.format(Locale.GERMANY, "%.1f %s", stats.optDouble(key), unit);
+        return stats.isNull(key) || !stats.has(key) ? "—" : String.format(I18n.locale(), "%.1f %s", stats.optDouble(key), unit);
     }
 
     private String statsText(JSONObject stats) {
-        return "Dauer " + formatDuration((long)stats.optDouble("seconds"))
-                + " · aktiv " + formatDuration((long)stats.optDouble("active"))
+        return I18n.t(R.string.ui_duration_257) + formatDuration((long)stats.optDouble("seconds"))
+                + I18n.t(R.string.ui_active_259) + formatDuration((long)stats.optDouble("active"))
                 + "\n" + metric(stats,"km","km") + " · " + metric(stats,"kcal","kcal")
-                + (stats.optBoolean("estimated") ? " (teilweise geschätzt)" : "")
-                + "\nLeistung Ø " + metric(stats,"power","W") + " · max " + metric(stats,"maxPower","W")
-                + "\nKadenz Ø " + metric(stats,"cadence","rpm") + " · max " + metric(stats,"maxCadence","rpm")
-                + "\nTempo Ø " + metric(stats,"speed","km/h") + " · max " + metric(stats,"maxSpeed","km/h")
-                + "\nArbeit " + metric(stats,"workKj","kJ") + " · " + metric(stats,"revolutions","Kurbelumdrehungen");
+                + (stats.optBoolean("estimated") ? I18n.t(R.string.ui_partly_estimated_262) : "")
+                + I18n.t(R.string.ui_power_avg_263) + metric(stats,"power","W") + I18n.t(R.string.ui_max_265) + metric(stats,"maxPower","W")
+                + I18n.t(R.string.ui_cadence_avg_267) + metric(stats,"cadence","rpm") + I18n.t(R.string.ui_max_265) + metric(stats,"maxCadence","rpm")
+                + I18n.t(R.string.ui_speed_avg_270) + metric(stats,"speed","km/h") + I18n.t(R.string.ui_max_265) + metric(stats,"maxSpeed","km/h")
+                + I18n.t(R.string.ui_work_273) + metric(stats,"workKj","kJ") + " · " + metric(stats,"revolutions",I18n.t(R.string.ui_crank_revolutions_277));
     }
 
     private void historyCard(String title, JSONObject stats) {
@@ -959,49 +964,49 @@ public final class MainActivity extends Activity {
             for(int i=0;i<nativeRows.length();i++){JSONObject row=nativeRows.getJSONObject(i);long epoch=row.optLong("started");String order=epoch==0?"":java.time.Instant.ofEpochSecond(epoch).atZone(java.time.ZoneId.systemDefault()).toLocalDateTime().toString();all.add(new JSONObject().put("row",row).put("imported",false).put("order",order).put("deviceKey",historyJson.optString("archiveId",historyCacheKey)+":"+row.optInt("device",-1)));}
             for(int i=0;i<imports.length();i++){JSONObject row=imports.getJSONObject(i);km+=row.optDouble("distance_km",0);kcal+=row.optDouble("calories_kcal",0);seconds+=row.optLong("duration_seconds",0);all.add(new JSONObject().put("row",row).put("imported",true).put("order",row.optString("datetime_local")));}
             all.sort((x,y)->y.optString("order").compareTo(x.optString("order")));
-            TextView totals=historyText(String.format(Locale.GERMANY,"%d Trainings\n\n%,.1f km     ·     %s\n%,.0f kcal insgesamt",count,km,formatDuration(seconds),kcal),20);totals.setBackgroundResource(R.drawable.hero_background);totals.setTextColor(getColor(R.color.hero_ink));totals.setPadding(dp(20),dp(20),dp(20),dp(20));LinearLayout.LayoutParams totalLp=new LinearLayout.LayoutParams(-1,-2);totalLp.topMargin=dp(14);historyCards.addView(totals,totalLp);
+            TextView totals=historyText(String.format(I18n.locale(),I18n.t(R.string.ui_d_workouts_1f_km_s_0f_kcal_in_total_292),count,km,formatDuration(seconds),kcal),20);totals.setBackgroundResource(R.drawable.hero_background);totals.setTextColor(getColor(R.color.hero_ink));totals.setPadding(dp(20),dp(20),dp(20),dp(20));LinearLayout.LayoutParams totalLp=new LinearLayout.LayoutParams(-1,-2);totalLp.topMargin=dp(14);historyCards.addView(totals,totalLp);
             historyCards.addView(new ProgressChart(this,all),new LinearLayout.LayoutParams(-1,-2));
-            historyCards.addView(historyText("Alle Trainings · antippen zum Vergleichen",18));
-            JSONObject current=historyJson==null?null:historyJson.optJSONObject("current");if(current!=null)historyCard("Aktuell · Training läuft",current.getJSONObject("stats"));
-            if(all.isEmpty())historyCards.addView(historyText("Dein erstes Training erscheint hier nach der Synchronisierung. Vorhandene Trainings kannst du in den Einstellungen importieren.",14));
+            historyCards.addView(historyText(I18n.t(R.string.ui_all_workouts_tap_to_compare_293),18));
+            JSONObject current=historyJson==null?null:historyJson.optJSONObject("current");if(current!=null)historyCard(I18n.t(R.string.ui_current_workout_in_progress_295),current.getJSONObject("stats"));
+            if(all.isEmpty())historyCards.addView(historyText(I18n.t(R.string.ui_your_first_workout_appears_here_after_synchronization_y_296),14));
             for(JSONObject item:all){
                 JSONObject row=item.getJSONObject("row");boolean imported=item.getBoolean("imported");JSONObject stats=imported?row:row.getJSONObject("stats");
-                String date=imported?row.optString("displayed_datetime",row.optString("datetime_local")):row.optLong("started")==0?"Datum unbekannt":DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT).format(new Date(row.getLong("started")*1000));
+                String date=imported?I18n.importDate(row):row.optLong("started")==0?I18n.t(R.string.ui_date_unknown_182):DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.SHORT,I18n.locale()).format(new Date(row.getLong("started")*1000));
                 long duration=(long)stats.optDouble(imported?"duration_seconds":"seconds",0);
                 String text=date+"\n\n"+formatDuration(duration)+"   ·   "+metric(stats,imported?"distance_km":"km","km")+"   ·   "+metric(stats,imported?"calories_kcal":"kcal","kcal")+"\nØ "+metric(stats,imported?"average_power_watts":"power","W")+"   ·   "+metric(stats,imported?"average_cadence_rpm":"cadence","rpm");
                 int intensityBand=TrainingInsights.band(item,all);double rate=TrainingInsights.intensity(item);
-                String intensityLabel=TrainingInsights.label(intensityBand)+(Double.isFinite(rate)?String.format(Locale.GERMANY," · %.1f kcal/min",rate):"");
+                String intensityLabel=TrainingInsights.label(intensityBand)+(Double.isFinite(rate)?String.format(I18n.locale()," · %.1f kcal/min",rate):"");
                 TextView card=historyText(text+"\n"+intensityLabel,14);
                 android.text.SpannableString colored=new android.text.SpannableString(card.getText());colored.setSpan(new android.text.style.ForegroundColorSpan(getColor(TrainingInsights.color(intensityBand))),text.length()+1,colored.length(),android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);card.setText(colored);
                 android.graphics.drawable.GradientDrawable background=new android.graphics.drawable.GradientDrawable();background.setColor(getColor(R.color.surface));background.setCornerRadius(dp(24));background.setStroke(dp(1),getColor(TrainingInsights.color(intensityBand)));card.setBackground(background);card.setLineSpacing(dp(3),1);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.topMargin=dp(10);historyCards.addView(card,lp);
                 card.setOnClickListener(v->{
                     AppDialog dialog=TrainingDialogs.details(this,item,all,date);
-                    dialog.action("Schließen",false,dialog::dismiss);
-                    dialog.action("Vergleichen",true,()->{dialog.dismiss();showSimilarTrainings(item,all);});
+                    dialog.action(I18n.t(R.string.ui_close_302),false,dialog::dismiss);
+                    dialog.action(I18n.t(R.string.ui_compare_303),true,()->{dialog.dismiss();showSimilarTrainings(item,all);});
                     showDialog(dialog);
                 });
             }
-        }catch(Exception e){historyStatus.setText("Verlauf konnte nicht geladen werden: "+e.getMessage());}
+        }catch(Exception e){historyStatus.setText(I18n.t(R.string.ui_could_not_load_history_304)+e.getMessage());}
     }
 
     private void showDialog(AppDialog dialog){if(activeDialog!=null && activeDialog.isShowing())activeDialog.dismiss();activeDialog=dialog;dialog.show();}
     private void showSimilarTrainings(JSONObject reference,java.util.List<JSONObject> all){
-        AppDialog dialog=TrainingDialogs.comparison(this,reference,all);dialog.action("Schließen",true,dialog::dismiss);showDialog(dialog);
+        AppDialog dialog=TrainingDialogs.comparison(this,reference,all);dialog.action(I18n.t(R.string.ui_close_302),true,dialog::dismiss);showDialog(dialog);
     }
     private void renderHeartRateDevices(){
         if(heartRateDevicesList==null)return;heartRateDevicesList.removeAllViews();
-        if(heartRateDevices.isEmpty()){TextView empty=AppDialog.text(this,"Gefundene Pulssensoren erscheinen hier. Aktiviere auf der Fenix zuerst Herzfrequenz senden.",15,R.color.muted);empty.setPadding(dp(4),dp(16),dp(4),dp(16));heartRateDevicesList.addView(empty);return;}
+        if(heartRateDevices.isEmpty()){TextView empty=AppDialog.text(this,I18n.t(R.string.ui_detected_heart_rate_sensors_appear_here_enable_broadcas_305),15,R.color.muted);empty.setPadding(dp(4),dp(16),dp(4),dp(16));heartRateDevicesList.addView(empty);return;}
         for(HeartRateClient.Device device:heartRateDevices){
-            LinearLayout row=new LinearLayout(this);row.setOrientation(LinearLayout.VERTICAL);row.setPadding(dp(16),dp(14),dp(16),dp(14));row.setBackground(AppDialog.interactive(this,R.color.surface_alt,18,true));TextView name=AppDialog.text(this,device.name+"  ›",18,R.color.ink);name.setTypeface(null,android.graphics.Typeface.BOLD);row.addView(name);row.addView(AppDialog.text(this,device.device.getAddress(),12,R.color.muted));row.setContentDescription(device.name+" verbinden");row.setFocusable(true);row.setClickable(true);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.topMargin=dp(10);heartRateDevicesList.addView(row,lp);row.setOnClickListener(v->{heartRateClient.select(device);if(heartRatePicker!=null)heartRatePicker.dismiss();});
+            LinearLayout row=new LinearLayout(this);row.setOrientation(LinearLayout.VERTICAL);row.setPadding(dp(16),dp(14),dp(16),dp(14));row.setBackground(AppDialog.interactive(this,R.color.surface_alt,18,true));TextView name=AppDialog.text(this,device.name+"  ›",18,R.color.ink);name.setTypeface(null,android.graphics.Typeface.BOLD);row.addView(name);row.addView(AppDialog.text(this,device.device.getAddress(),12,R.color.muted));row.setContentDescription(device.name+I18n.t(R.string.ui_connect_307));row.setFocusable(true);row.setClickable(true);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.topMargin=dp(10);heartRateDevicesList.addView(row,lp);row.setOnClickListener(v->{heartRateClient.select(device);if(heartRatePicker!=null)heartRatePicker.dismiss();});
         }
     }
     private void chooseHeartRateSensor(){
         if(!hasBluetoothPermissions()){requestPermissions(new String[]{Manifest.permission.BLUETOOTH_SCAN,Manifest.permission.BLUETOOTH_CONNECT},BLUETOOTH_PERMISSION_REQUEST);return;}
         if(heartRatePicker!=null)heartRatePicker.dismiss();heartRateDevices=new java.util.ArrayList<>();
-        heartRatePicker=new AppDialog(this,"LIVE-PULS","Pulssensor verbinden","Auf der Fenix Herzfrequenz senden aktivieren, dann deine Uhr auswählen.",R.drawable.status_watch);
-        LinearLayout statusRow=heartRatePicker.group("");statusRow.setOrientation(LinearLayout.HORIZONTAL);statusRow.setGravity(android.view.Gravity.CENTER_VERTICAL);heartRateSearchProgress=new android.widget.ProgressBar(this);heartRateSearchProgress.setIndeterminateTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.accent)));statusRow.addView(heartRateSearchProgress,new LinearLayout.LayoutParams(dp(24),dp(24)));heartRateSearchStatus=AppDialog.text(this,"Suche läuft …",15,R.color.ink);heartRateSearchStatus.setPadding(dp(12),0,0,0);statusRow.addView(heartRateSearchStatus,new LinearLayout.LayoutParams(0,-2,1));
+        heartRatePicker=new AppDialog(this,I18n.t(R.string.ui_live_heart_rate_308),I18n.t(R.string.ui_connect_heart_rate_sensor_309),I18n.t(R.string.ui_enable_broadcast_heart_rate_on_your_fenix_then_select_y_310),R.drawable.status_watch);
+        LinearLayout statusRow=heartRatePicker.group("");statusRow.setOrientation(LinearLayout.HORIZONTAL);statusRow.setGravity(android.view.Gravity.CENTER_VERTICAL);heartRateSearchProgress=new android.widget.ProgressBar(this);heartRateSearchProgress.setIndeterminateTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.accent)));statusRow.addView(heartRateSearchProgress,new LinearLayout.LayoutParams(dp(24),dp(24)));heartRateSearchStatus=AppDialog.text(this,I18n.t(R.string.ui_searching_311),15,R.color.ink);heartRateSearchStatus.setPadding(dp(12),0,0,0);statusRow.addView(heartRateSearchStatus,new LinearLayout.LayoutParams(0,-2,1));
         heartRateDevicesList=new LinearLayout(this);heartRateDevicesList.setOrientation(LinearLayout.VERTICAL);heartRatePicker.body.addView(heartRateDevicesList);renderHeartRateDevices();
-        heartRatePicker.action("Schließen",false,()->{if(heartRatePicker!=null)heartRatePicker.dismiss();});heartRatePicker.action("Erneut suchen",true,()->heartRateClient.search());
+        heartRatePicker.action(I18n.t(R.string.ui_close_302),false,()->{if(heartRatePicker!=null)heartRatePicker.dismiss();});heartRatePicker.action(I18n.t(R.string.ui_search_again_67),true,()->heartRateClient.search());
         heartRatePicker.setOnDismissListener(dialog->{heartRateClient.stopSearch();heartRateDevicesList=null;heartRateSearchStatus=null;heartRateSearchProgress=null;heartRatePicker=null;});showDialog(heartRatePicker);heartRateClient.search();
     }
     @Override protected void onResume(){super.onResume();if(heartRateClient!=null)heartRateClient.restore();}
@@ -1013,8 +1018,8 @@ public final class MainActivity extends Activity {
         if (gatt != null && (checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)) gatt.disconnect();
         else {
             connected = false;
-            connectButton.setText("Bridge verbinden");
-            showState("●  Getrennt", false);
+            connectButton.setText(I18n.t(R.string.ui_connect_bridge_62));
+            showState(I18n.t(R.string.ui_disconnected_312), false);
         }
     }
 
@@ -1034,12 +1039,33 @@ public final class MainActivity extends Activity {
 
     private void chooseTheme() {
         int current=getSharedPreferences("display",MODE_PRIVATE).getInt("theme",0);
-        AppDialog dialog=new AppDialog(this,"DARSTELLUNG","Dein Farbschema","Wähle einen Modus oder folge deinem Smartphone.",R.drawable.nav_settings);
-        String[] names={"Wie das System","Hell","Dunkel"},descriptions={"Wechselt mit den Systemeinstellungen","Helle Flächen und klare Kontraste","Angenehm bei wenig Licht"};
-        for(int i=0;i<3;i++){final int choice=i;LinearLayout row=dialog.group("");row.setBackground(AppDialog.interactive(this,current==i?R.color.surface_alt:R.color.surface,18,true));TextView title=AppDialog.text(this,(current==i?"✓  ":"")+names[i],18,current==i?R.color.accent:R.color.ink);title.setTypeface(null,android.graphics.Typeface.BOLD);row.addView(title);row.addView(AppDialog.text(this,descriptions[i],13,R.color.muted));row.setFocusable(true);row.setContentDescription(names[i]+(current==i?", ausgewählt":""));row.setOnClickListener(v->{getSharedPreferences("display",MODE_PRIVATE).edit().putInt("theme",choice).apply();dialog.dismiss();getSystemService(UiModeManager.class).setApplicationNightMode(choice==1?UiModeManager.MODE_NIGHT_NO:choice==2?UiModeManager.MODE_NIGHT_YES:UiModeManager.MODE_NIGHT_AUTO);updateThemeLabel();});}
-        dialog.action("Schließen",false,dialog::dismiss);showDialog(dialog);
+        AppDialog dialog=new AppDialog(this,I18n.t(R.string.ui_appearance_314),I18n.t(R.string.ui_your_color_scheme_315),I18n.t(R.string.ui_choose_a_mode_or_follow_your_phone_316),R.drawable.nav_settings);
+        String[] names={I18n.t(R.string.ui_follow_system_317),I18n.t(R.string.ui_light_318),I18n.t(R.string.ui_dark_319)},descriptions={I18n.t(R.string.ui_follows_system_settings_320),I18n.t(R.string.ui_light_surfaces_and_clear_contrast_321),I18n.t(R.string.ui_comfortable_in_low_light_322)};
+        for(int i=0;i<3;i++){final int choice=i;LinearLayout row=dialog.group("");row.setBackground(AppDialog.interactive(this,current==i?R.color.surface_alt:R.color.surface,18,true));TextView title=AppDialog.text(this,(current==i?"✓  ":"")+names[i],18,current==i?R.color.accent:R.color.ink);title.setTypeface(null,android.graphics.Typeface.BOLD);row.addView(title);row.addView(AppDialog.text(this,descriptions[i],13,R.color.muted));row.setFocusable(true);row.setContentDescription(names[i]+(current==i?I18n.t(R.string.ui_selected_324):""));row.setOnClickListener(v->{getSharedPreferences("display",MODE_PRIVATE).edit().putInt("theme",choice).apply();dialog.dismiss();getSystemService(UiModeManager.class).setApplicationNightMode(choice==1?UiModeManager.MODE_NIGHT_NO:choice==2?UiModeManager.MODE_NIGHT_YES:UiModeManager.MODE_NIGHT_AUTO);updateThemeLabel();});}
+        dialog.action(I18n.t(R.string.ui_close_302),false,dialog::dismiss);showDialog(dialog);
     }
-    private void updateThemeLabel(){int mode=getSharedPreferences("display",MODE_PRIVATE).getInt("theme",0);themeButton.setText("Farbschema · "+(mode==1?"Hell":mode==2?"Dunkel":"System"));}
+    private void updateThemeLabel(){int mode=getSharedPreferences("display",MODE_PRIVATE).getInt("theme",0);themeButton.setText(I18n.t(R.string.ui_color_scheme_325)+(mode==1?I18n.t(R.string.ui_light_318):mode==2?I18n.t(R.string.ui_dark_319):I18n.t(R.string.ui_system_326)));}
+    private void chooseLanguage() {
+        AppDialog dialog=new AppDialog(this,I18n.t(R.string.language_title),I18n.t(R.string.language_title),I18n.t(R.string.language_subtitle),R.drawable.nav_settings);
+        for(String language:new String[]{"en","de"}) {
+            String label="de".equals(language)?"Deutsch":"English";
+            dialog.action(label,language.equals(I18n.locale().getLanguage()),()->{dialog.dismiss();setLanguage(language);});
+        }
+        showDialog(dialog);
+    }
+    private void setLanguage(String language) {
+        if(!"en".equals(language) && !"de".equals(language))return;
+        android.content.res.Resources previous=I18n.resources();
+        String oldStatus=status.getText().toString(),oldDetail=detail.getText().toString(),oldHistory=historyStatus.getText().toString();
+        getSharedPreferences("display",MODE_PRIVATE).edit().putString("language",language).apply();
+        I18n.init(this);
+        android.content.res.Configuration config=new android.content.res.Configuration(getResources().getConfiguration());
+        onConfigurationChanged(config);
+        status.setText(I18n.retranslate(oldStatus,previous));detail.setText(I18n.retranslate(oldDetail,previous));historyStatus.setText(I18n.retranslate(oldHistory,previous));
+        heartRateClient.translateState(previous);
+        if(lastLivePacket!=null)parseLiveData(lastLivePacket);
+        updateConnectionIcons();updateSettingsAvailability();
+    }
 
     @Override protected void onDestroy() {
         manualDisconnect = true;

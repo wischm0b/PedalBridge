@@ -1,0 +1,299 @@
+<resources>
+    <string name="ui_dismiss_message_4" formatted="false">"Dismiss message"</string>
+    <string name="ui_heart_rate_sensor_9" formatted="false">"Heart rate sensor"</string>
+    <string name="ui_no_heart_rate_sensor_selected_yet_10" formatted="false">"No heart rate sensor selected yet"</string>
+    <string name="ui_enable_bluetooth_for_the_heart_rate_sensor_16" formatted="false">"Enable Bluetooth for the heart rate sensor"</string>
+    <string name="ui_select_a_heart_rate_sensor_first_17" formatted="false">"Select a heart rate sensor first"</string>
+    <string name="ui_bluetooth_permission_missing_18" formatted="false">"Bluetooth permission missing"</string>
+    <string name="ui_enable_bluetooth_19" formatted="false">"Enable Bluetooth"</string>
+    <string name="ui_bluetooth_scanning_unavailable_20" formatted="false">"Bluetooth scanning unavailable"</string>
+    <string name="ui_searching_start_broadcast_heart_rate_on_your_fenix_21" formatted="false">"Searching · start 'Broadcast Heart Rate' on your Fenix"</string>
+    <string name="ui_could_not_start_heart_rate_sensor_search_22" formatted="false">"Could not start heart rate sensor search"</string>
+    <string name="ui_no_heart_rate_sensor_found_enable_broadcast_heart_rate_23" formatted="false">"No heart rate sensor found · enable Broadcast Heart Rate"</string>
+    <string name="ui_select_a_heart_rate_sensor_from_the_list_24" formatted="false">"Select a heart rate sensor from the list"</string>
+    <string name="ui_heart_rate_sensor_search_failed_25" formatted="false">"Heart rate sensor search failed ("</string>
+    <string name="ui_connecting_27" formatted="false">" · connecting …"</string>
+    <string name="ui_could_not_connect_to_the_heart_rate_sensor_28" formatted="false">"Could not connect to the heart rate sensor"</string>
+    <string name="ui_heart_rate_sensor_not_responding_enable_broadcast_heart_29" formatted="false">"Heart rate sensor not responding · enable Broadcast Heart Rate on your Fenix"</string>
+    <string name="ui_connected_but_no_heart_rate_check_broadcast_heart_rate__30" formatted="false">"Connected, but no heart rate · check Broadcast Heart Rate on your Fenix"</string>
+    <string name="ui_no_recent_heart_rate_readings_31" formatted="false">" · no recent heart rate readings"</string>
+    <string name="ui_heart_rate_sensor_disconnected_32" formatted="false">"Heart rate sensor disconnected"</string>
+    <string name="ui_heart_rate_sensor_disconnected_gatt_33" formatted="false">"Heart rate sensor disconnected · GATT "</string>
+    <string name="ui_will_retry_34" formatted="false">" · will retry"</string>
+    <string name="ui_could_not_load_the_heart_rate_service_35" formatted="false">"Could not load the heart rate service"</string>
+    <string name="ui_this_device_does_not_provide_a_bluetooth_heart_rate_ser_36" formatted="false">"This device does not provide a Bluetooth heart rate service"</string>
+    <string name="ui_could_not_subscribe_to_heart_rate_readings_37" formatted="false">"Could not subscribe to heart rate readings"</string>
+    <string name="ui_heart_rate_sensor_is_busy_38" formatted="false">"Heart rate sensor is busy"</string>
+    <string name="ui_heart_rate_subscription_failed_39" formatted="false">"Heart rate subscription failed ("</string>
+    <string name="ui_connected_waiting_for_heart_rate_40" formatted="false">" · connected, waiting for heart rate"</string>
+    <string name="ui_live_heart_rate_connected_41" formatted="false">" · live heart rate connected"</string>
+    <string name="ui_no_valid_heart_rate_check_skin_contact_42" formatted="false">" · no valid heart rate / check skin contact"</string>
+    <string name="ui_transfer_interrupted_please_try_loading_again_51" formatted="false">"Transfer interrupted. Please try loading again."</string>
+    <string name="ui_live_heart_rate_55" formatted="false">"Live heart rate: "</string>
+    <string name="ui_beats_per_minute_56" formatted="false">" beats per minute"</string>
+    <string name="ui_bluetooth_is_off_57" formatted="false">"●  Bluetooth is off"</string>
+    <string name="ui_switching_wi_fi_59" formatted="false">"Switching Wi-Fi"</string>
+    <string name="ui_disconnect_60" formatted="false">"Disconnect"</string>
+    <string name="ui_stop_searching_61" formatted="false">"Stop searching"</string>
+    <string name="ui_connect_bridge_62" formatted="false">"Connect bridge"</string>
+    <string name="ui_bluetooth_permission_missing_63" formatted="false">"●  Bluetooth permission missing"</string>
+    <string name="ui_searching_for_bridge_64" formatted="false">"●  Searching for bridge …"</string>
+    <string name="ui_pedalbridge_not_found_65" formatted="false">"●  PedalBridge not found"</string>
+    <string name="ui_turn_on_the_bridge_and_bring_it_within_range_66" formatted="false">"Turn on the bridge and bring it within range."</string>
+    <string name="ui_search_again_67" formatted="false">"Search again"</string>
+    <string name="ui_connecting_to_bridge_71" formatted="false">"●  Connecting to bridge …"</string>
+    <string name="ui_bluetooth_search_failed_72" formatted="false">"●  Bluetooth search failed"</string>
+    <string name="ui_android_ble_error_73" formatted="false">"Android BLE error "</string>
+    <string name="ui_could_not_load_services_synchronize_again_74" formatted="false">"Could not load services. Synchronize again."</string>
+    <string name="ui_bluetooth_permission_missing_75" formatted="false">"Bluetooth permission missing."</string>
+    <string name="ui_connected_reloading_bluetooth_services_76" formatted="false">"Connected · reloading Bluetooth services …"</string>
+    <string name="ui_archive_service_not_found_remove_the_bluetooth_device_i_77" formatted="false">"Archive service not found. Remove the Bluetooth device in Android and reconnect."</string>
+    <string name="ui_loading_services_79" formatted="false">"●  Loading services …"</string>
+    <string name="ui_offline_last_loaded_history_80" formatted="false">"Offline · last loaded history"</string>
+    <string name="ui_disconnected_81" formatted="false">"●  Disconnected"</string>
+    <string name="ui_bluetooth_disconnect_82" formatted="false">"Bluetooth disconnect "</string>
+    <string name="ui_gatt_status_83" formatted="false">" · GATT status "</string>
+    <string name="ui_retrying_84" formatted="false">" · retrying"</string>
+    <string name="ui_refreshing_bluetooth_services_85" formatted="false">"Refreshing Bluetooth services …"</string>
+    <string name="ui_bluetooth_services_were_not_fully_loaded_86" formatted="false">"Bluetooth services were not fully loaded"</string>
+    <string name="ui_reconnect_in_settings_87" formatted="false">"Reconnect in Settings."</string>
+    <string name="ui_live_connected_88" formatted="false">"●  Live connected"</string>
+    <string name="ui_live_connected_but_the_archive_service_is_missing_reloa_91" formatted="false">"Live connected, but the archive service is missing. Reload services in Settings."</string>
+    <string name="ui_bluetooth_write_failed_93" formatted="false">"Bluetooth write failed: "</string>
+    <string name="ui_garmin_power_105" formatted="false">"Garmin Power ✓"</string>
+    <string name="ui_no_recent_data_111" formatted="false">"   ·   no recent data"</string>
+    <string name="ui_connected_115" formatted="false">"Connected"</string>
+    <string name="ui_connecting_116" formatted="false">"Connecting …"</string>
+    <string name="ui_disconnected_117" formatted="false">"Disconnected"</string>
+    <string name="ui_unknown_119" formatted="false">"Unknown"</string>
+    <string name="ui_no_data_120" formatted="false">"No data"</string>
+    <string name="ui_power_123" formatted="false">"Power"</string>
+    <string name="ui_saving_session_on_the_esp_126" formatted="false">"Saving session on the ESP"</string>
+    <string name="ui_please_wait_for_the_bluetooth_transfer_127" formatted="false">"Please wait for the Bluetooth transfer"</string>
+    <string name="ui_bluetooth_is_busy_please_try_loading_again_128" formatted="false">"Bluetooth is busy. Please try loading again."</string>
+    <string name="ui_your_activities_129" formatted="false">"Your activities"</string>
+    <string name="ui_synchronize_history_130" formatted="false">"Synchronize history"</string>
+    <string name="ui_synchronize_131" formatted="false">"Synchronize"</string>
+    <string name="ui_appearance_132" formatted="false">"Appearance"</string>
+    <string name="ui_connection_133" formatted="false">"Connection"</string>
+    <string name="ui_saved_workouts_134" formatted="false">"Saved workouts"</string>
+    <string name="ui_bridge_status_135" formatted="false">"Bridge status"</string>
+    <string name="ui_connect_the_bridge_to_load_device_settings_136" formatted="false">"Connect the bridge to load device settings."</string>
+    <string name="ui_refresh_status_137" formatted="false">"Refresh status"</string>
+    <string name="ui_live_heart_rate_fenix_bluetooth_sensor_138" formatted="false">"Live heart rate · Fenix / Bluetooth sensor"</string>
+    <string name="ui_on_your_fenix_settings_health_wellness_wrist_heart_rate_139" formatted="false">"On your Fenix: Settings → Health &amp; Wellness → Wrist Heart Rate → Broadcast Heart Rate. Automatic broadcasting during activities is also available."</string>
+    <string name="ui_find_heart_rate_sensor_140" formatted="false">"Find heart rate sensor"</string>
+    <string name="ui_reconnect_heart_rate_sensor_141" formatted="false">"Reconnect heart rate sensor"</string>
+    <string name="ui_disconnect_heart_rate_sensor_142" formatted="false">"Disconnect heart rate sensor"</string>
+    <string name="ui_direct_to_the_app_heart_rate_is_live_only_and_is_not_ye_143" formatted="false">"Direct to the app · heart rate is live only and is not yet saved in the workout archive. The bridge keeps recording without your phone."</string>
+    <string name="ui_recording_144" formatted="false">"Recording"</string>
+    <string name="ui_save_per_second_data_145" formatted="false">"Save per-second data"</string>
+    <string name="ui_automatically_finish_workout_after_146" formatted="false">"Automatically finish workout after"</string>
+    <string name="ui_minutes_without_movement_147" formatted="false">" minutes without movement"</string>
+    <string name="ui_status_light_148" formatted="false">"Status light"</string>
+    <string name="ui_brightness_149" formatted="false">"Brightness"</string>
+    <string name="ui_connection_status_150" formatted="false">"Connection status"</string>
+    <string name="ui_short_pulse_151" formatted="false">"Short pulse"</string>
+    <string name="ui_double_pulse_152" formatted="false">"Double pulse"</string>
+    <string name="ui_off_153" formatted="false">"Off"</string>
+    <string name="ui_single_color_led_the_separate_power_indicator_is_unaffe_154" formatted="false">"Single-color LED · the separate power indicator is unaffected."</string>
+    <string name="ui_save_changes_155" formatted="false">"Save changes"</string>
+    <string name="ui_brightness_156" formatted="false">"Brightness · "</string>
+    <string name="ui_storage_backup_160" formatted="false">"Storage &amp; backup"</string>
+    <string name="ui_storage_details_load_after_connecting_161" formatted="false">"Storage details load after connecting."</string>
+    <string name="ui_back_up_archive_as_zip_162" formatted="false">"Back up archive as ZIP"</string>
+    <string name="ui_pedalbridge_archive_zip_164" formatted="false">"PedalBridge-Archive.zip"</string>
+    <string name="ui_import_workout_file_165" formatted="false">"Import workout file"</string>
+    <string name="ui_offline_appearance_and_archive_remain_available_169" formatted="false">"Offline · appearance and archive remain available."</string>
+    <string name="ui_disconnects_last_gatt_status_170" formatted="false">" disconnects · last GATT status "</string>
+    <string name="ui_reloading_bluetooth_services_171" formatted="false">"Reloading Bluetooth services …"</string>
+    <string name="ui_connected_loading_device_settings_172" formatted="false">"Connected · loading device settings …"</string>
+    <string name="ui_connected_synchronizing_archive_settings_can_be_saved_a_173" formatted="false">"Connected · synchronizing archive. Settings can be saved afterwards."</string>
+    <string name="ui_unsaved_changes_174" formatted="false">"Unsaved changes"</string>
+    <string name="ui_connected_device_settings_up_to_date_175" formatted="false">"Connected · device settings up to date"</string>
+    <string name="ui_local_archive_176" formatted="false">"Local archive · "</string>
+    <string name="ui_cannot_read_local_archive_177" formatted="false">"Cannot read local archive: "</string>
+    <string name="ui_no_esp_archive_loaded_yet_178" formatted="false">"No ESP archive loaded yet"</string>
+    <string name="ui_saved_snapshot_179" formatted="false">"Saved snapshot · "</string>
+    <string name="ui_cannot_read_saved_history_please_load_again_180" formatted="false">"Cannot read saved history. Please load again."</string>
+    <string name="ui_date_unknown_182" formatted="false">"Date unknown"</string>
+    <string name="ui_offline_183" formatted="false">"Offline · "</string>
+    <string name="ui_loading_history_over_bluetooth_184" formatted="false">"Loading history over Bluetooth …"</string>
+    <string name="ui_could_not_request_history_185" formatted="false">"Could not request history"</string>
+    <string name="ui_could_not_start_bluetooth_read_186" formatted="false">"Could not start Bluetooth read"</string>
+    <string name="ui_could_not_read_history_187" formatted="false">"Could not read history: "</string>
+    <string name="ui_esp_is_not_responding_yet_please_try_again_188" formatted="false">"ESP is not responding yet. Please try again."</string>
+    <string name="ui_incomplete_history_data_189" formatted="false">"Incomplete history data"</string>
+    <string name="ui_mybodytone_import_190" formatted="false">"MyBodytone import"</string>
+    <string name="ui_recording_191" formatted="false">"Recording "</string>
+    <string name="ui_load_history_193" formatted="false">"Load history"</string>
+    <string name="ui_version_196" formatted="false">"Version"</string>
+    <string name="ui_import_file_on_bridge_1f_kib_workouts_appear_in_the_com_200" formatted="false">"Import file on bridge: %.1f KiB · workouts appear in the combined history"</string>
+    <string name="ui_no_additional_import_file_on_bridge_201" formatted="false">"No additional import file on bridge"</string>
+    <string name="ui_page_order_206" formatted="false">"Page order"</string>
+    <string name="ui_updated_208" formatted="false">"Updated · "</string>
+    <string name="ui_could_not_archive_history_210" formatted="false">"Could not archive history: "</string>
+    <string name="ui_offline_saved_data_is_preserved_211" formatted="false">"Offline · saved data is preserved"</string>
+    <string name="ui_archive_synchronized_212" formatted="false">"Archive synchronized · "</string>
+    <string name="ui_invalid_recording_file_list_213" formatted="false">"Invalid recording file list"</string>
+    <string name="ui_invalid_session_id_215" formatted="false">"Invalid session ID"</string>
+    <string name="ui_import_checksum_mismatch_please_synchronize_again_216" formatted="false">"Import checksum mismatch; please synchronize again"</string>
+    <string name="ui_import_failed_217" formatted="false">"Import failed: "</string>
+    <string name="ui_recording_file_is_incomplete_retained_on_esp_218" formatted="false">"Recording file is incomplete; retained on ESP"</string>
+    <string name="ui_unknown_recording_format_retained_on_esp_219" formatted="false">"Unknown recording format; retained on ESP"</string>
+    <string name="ui_saving_recording_permanently_220" formatted="false">"Saving recording permanently …"</string>
+    <string name="ui_recording_saved_esp_cleanup_will_be_retried_on_the_next_221" formatted="false">"Recording saved; ESP cleanup will be retried on the next sync"</string>
+    <string name="ui_save_failed_esp_retains_recording_222" formatted="false">"Save failed; ESP retains recording: "</string>
+    <string name="ui_could_not_load_device_status_please_refresh_status_223" formatted="false">"Could not load device status. Please refresh status."</string>
+    <string name="ui_recording_saved_confirmation_missing_224" formatted="false">"Recording saved; confirmation missing"</string>
+    <string name="ui_bluetooth_is_busy_refresh_status_again_225" formatted="false">"Bluetooth is busy. Refresh status again."</string>
+    <string name="ui_recording_saved_could_not_read_confirmation_226" formatted="false">"Recording saved; could not read confirmation"</string>
+    <string name="ui_recording_backed_up_esp_cleanup_not_confirmed_229" formatted="false">"Recording backed up; ESP cleanup not confirmed"</string>
+    <string name="ui_recording_backed_up_esp_did_not_confirm_deletion_231" formatted="false">"Recording backed up; ESP did not confirm deletion"</string>
+    <string name="ui_cannot_read_device_status_check_the_connection_again_232" formatted="false">"Cannot read device status. Check the connection again."</string>
+    <string name="ui_cannot_read_esp_status_local_backup_is_preserved_233" formatted="false">"Cannot read ESP status; local backup is preserved"</string>
+    <string name="ui_turn_off_setup_wi_fi_236" formatted="false">"Turn off setup Wi-Fi"</string>
+    <string name="ui_turn_on_setup_wi_fi_237" formatted="false">"Turn on setup Wi-Fi"</string>
+    <string name="ui_0f_of_0f_kib_used_0f_kib_free_d_workouts_d_recordings_o_242" formatted="false">"%.0f of %.0f KiB used · %.0f KiB free\n%d workouts · %d recordings on the bridge\nAbout %.1f hours of per-second data remaining\n%d older recordings automatically released%s"</string>
+    <string name="ui_per_second_recording_paused_storage_full_247" formatted="false">"\nPer-second recording paused: storage full"</string>
+    <string name="ui_file_not_opened_248" formatted="false">"File not opened"</string>
+    <string name="ui_import_file_too_large_max_2_mb_249" formatted="false">"Import file too large (max. 2 MB)"</string>
+    <string name="ui_new_workouts_imported_250" formatted="false">" new workouts imported"</string>
+    <string name="ui_archive_backed_up_including_recordings_251" formatted="false">"Archive backed up, including recordings"</string>
+    <string name="ui_backup_failed_252" formatted="false">"Backup failed: "</string>
+    <string name="ui_duration_257" formatted="false">"Duration "</string>
+    <string name="ui_active_259" formatted="false">" · active "</string>
+    <string name="ui_partly_estimated_262" formatted="false">" (partly estimated)"</string>
+    <string name="ui_power_avg_263" formatted="false">"\nPower avg. "</string>
+    <string name="ui_max_265" formatted="false">" · max "</string>
+    <string name="ui_cadence_avg_267" formatted="false">"\nCadence avg. "</string>
+    <string name="ui_speed_avg_270" formatted="false">"\nSpeed avg. "</string>
+    <string name="ui_work_273" formatted="false">"\nWork "</string>
+    <string name="ui_crank_revolutions_277" formatted="false">"Crank revolutions"</string>
+    <string name="ui_d_workouts_1f_km_s_0f_kcal_in_total_292" formatted="false">"%d workouts\n\n%,.1f km     ·     %s\n%,.0f kcal in total"</string>
+    <string name="ui_all_workouts_tap_to_compare_293" formatted="false">"All workouts · tap to compare"</string>
+    <string name="ui_current_workout_in_progress_295" formatted="false">"Current · workout in progress"</string>
+    <string name="ui_your_first_workout_appears_here_after_synchronization_y_296" formatted="false">"Your first workout appears here after synchronization. You can import existing workouts in Settings."</string>
+    <string name="ui_close_302" formatted="false">"Close"</string>
+    <string name="ui_compare_303" formatted="false">"Compare"</string>
+    <string name="ui_could_not_load_history_304" formatted="false">"Could not load history: "</string>
+    <string name="ui_detected_heart_rate_sensors_appear_here_enable_broadcas_305" formatted="false">"Detected heart rate sensors appear here. Enable Broadcast Heart Rate on your Fenix first."</string>
+    <string name="ui_connect_307" formatted="false">" connect"</string>
+    <string name="ui_live_heart_rate_308" formatted="false">"LIVE HEART RATE"</string>
+    <string name="ui_connect_heart_rate_sensor_309" formatted="false">"Connect heart rate sensor"</string>
+    <string name="ui_enable_broadcast_heart_rate_on_your_fenix_then_select_y_310" formatted="false">"Enable Broadcast Heart Rate on your Fenix, then select your watch."</string>
+    <string name="ui_searching_311" formatted="false">"Searching …"</string>
+    <string name="ui_disconnected_312" formatted="false">"●  Disconnected"</string>
+    <string name="ui_appearance_314" formatted="false">"APPEARANCE"</string>
+    <string name="ui_your_color_scheme_315" formatted="false">"Your color scheme"</string>
+    <string name="ui_choose_a_mode_or_follow_your_phone_316" formatted="false">"Choose a mode or follow your phone."</string>
+    <string name="ui_follow_system_317" formatted="false">"Follow system"</string>
+    <string name="ui_light_318" formatted="false">"Light"</string>
+    <string name="ui_dark_319" formatted="false">"Dark"</string>
+    <string name="ui_follows_system_settings_320" formatted="false">"Follows system settings"</string>
+    <string name="ui_light_surfaces_and_clear_contrast_321" formatted="false">"Light surfaces and clear contrast"</string>
+    <string name="ui_comfortable_in_low_light_322" formatted="false">"Comfortable in low light"</string>
+    <string name="ui_selected_324" formatted="false">", selected"</string>
+    <string name="ui_color_scheme_325" formatted="false">"Color scheme · "</string>
+    <string name="ui_system_326" formatted="false">"System"</string>
+    <string name="ui_workout_duration_327" formatted="false">"Workout duration"</string>
+    <string name="ui_distance_328" formatted="false">"Distance"</string>
+    <string name="ui_energy_per_minute_329" formatted="false">"Energy per minute"</string>
+    <string name="ui_avg_power_330" formatted="false">"Avg. power"</string>
+    <string name="ui_your_progress_337" formatted="false">"Your progress"</string>
+    <string name="ui_workout_chart_metric_338" formatted="false">"Workout chart metric"</string>
+    <string name="ui_intensity_by_kcal_min_blue_lower_teal_medium_mint_highe_339" formatted="false">"Intensity by kcal/min: Blue lower · Teal medium · Mint higher. Relative to the same source, estimated from calories. Gray: unclassified."</string>
+    <string name="ui_blue_lower_340" formatted="false">"Blue lower"</string>
+    <string name="ui_teal_medium_341" formatted="false">"Teal medium"</string>
+    <string name="ui_mint_higher_342" formatted="false">"Mint higher"</string>
+    <string name="ui_3_months_343" formatted="false">"3 months"</string>
+    <string name="ui_all_time_344" formatted="false">"All time"</string>
+    <string name="ui_zoom_out_346" formatted="false">"Zoom out"</string>
+    <string name="ui_zoom_in_348" formatted="false">"Zoom in"</string>
+    <string name="ui_tap_a_point_for_workout_details_349" formatted="false">"Tap a point for workout details"</string>
+    <string name="ui_two_fingers_zoom_and_pan_swipe_sideways_points_workouts_350" formatted="false">"Two fingers: zoom and pan · swipe sideways\nPoints: workouts · line: average of the last 5 valid workouts"</string>
+    <string name="ui_workouts_in_range_353" formatted="false">" workouts in range · "</string>
+    <string name="ui_undated_workouts_shown_only_in_the_list_354" formatted="false">" undated workouts shown only in the list"</string>
+    <string name="ui_calories_are_device_dependent_estimates_355" formatted="false">"\nCalories are device-dependent estimates."</string>
+    <string name="ui_missing_values_and_zero_power_excluded_356" formatted="false">"\nMissing values and zero power excluded."</string>
+    <string name="ui_workouts_change_the_range_using_the_buttons_individual__358" formatted="false">" workouts. Change the range using the buttons; individual values are in the workout list."</string>
+    <string name="ui_no_values_in_this_range_362" formatted="false">"No values in this range"</string>
+    <string name="ui_unsupported_mybodytone_import_file_376" formatted="false">"Unsupported MyBodytone import file"</string>
+    <string name="ui_too_many_sessions_377" formatted="false">"Too many sessions"</string>
+    <string name="ui_invalid_or_duplicate_import_id_381" formatted="false">"Invalid or duplicate import ID"</string>
+    <string name="ui_invalid_value_382" formatted="false">"Invalid value: "</string>
+    <string name="ui_import_failed_387" formatted="false">"Import failed"</string>
+    <string name="ui_import_file_not_backed_up_390" formatted="false">"Import file not backed up"</string>
+    <string name="ui_workout_archive_425" formatted="false">"WORKOUT ARCHIVE"</string>
+    <string name="ui_your_workout_426" formatted="false">"Your workout"</string>
+    <string name="ui_workout_duration_427" formatted="false">"WORKOUT DURATION"</string>
+    <string name="ui_active_time_428" formatted="false">"Active time · "</string>
+    <string name="ui_energy_429" formatted="false">"Energy"</string>
+    <string name="ui_avg_cadence_430" formatted="false">"Avg. cadence"</string>
+    <string name="ui_avg_speed_431" formatted="false">"Avg. speed"</string>
+    <string name="ui_avg_resistance_433" formatted="false">"Avg. resistance"</string>
+    <string name="ui_intensity_436" formatted="false">"Intensity"</string>
+    <string name="ui_1f_kcal_per_minute_437" formatted="false">"%.1f kcal per minute"</string>
+    <string name="ui_relative_to_comparable_workouts_from_the_same_source_cl_438" formatted="false">"Relative to comparable workouts from the same source. Classification is available after five workouts lasting at least ten minutes."</string>
+    <string name="ui_more_metrics_439" formatted="false">"More metrics"</string>
+    <string name="ui_max_power_440" formatted="false">"Max. power"</string>
+    <string name="ui_max_cadence_441" formatted="false">"Max. cadence"</string>
+    <string name="ui_max_speed_442" formatted="false">"Max. speed"</string>
+    <string name="ui_mechanical_work_443" formatted="false">"Mechanical work"</string>
+    <string name="ui_revolutions_444" formatted="false">"Revolutions"</string>
+    <string name="ui_avg_heart_rate_445" formatted="false">"Avg. heart rate"</string>
+    <string name="ui_unavailable_448" formatted="false">"Unavailable"</string>
+    <string name="ui_active_time_449" formatted="false">"Active time"</string>
+    <string name="ui_pauses_451" formatted="false">"Pauses"</string>
+    <string name="ui_imported_from_mybodytone_458" formatted="false">"Imported from MyBodytone"</string>
+    <string name="ui_recording_saved_on_your_phone_459" formatted="false">"Recording saved on your phone"</string>
+    <string name="ui_recorded_by_your_bridge_460" formatted="false">"Recorded by your bridge"</string>
+    <string name="ui_time_shown_as_reported_by_the_source_per_second_data_is_461" formatted="false">"Time shown as reported by the source. Per-second data is unavailable for imported workouts."</string>
+    <string name="ui_a_heart_rate_of_0_probably_indicates_a_missing_reading_464" formatted="false">"A heart rate of 0 probably indicates a missing reading."</string>
+    <string name="ui_a_power_value_of_0_was_imported_unchanged_and_is_unveri_466" formatted="false">"A power value of 0 was imported unchanged and is unverified."</string>
+    <string name="ui_show_original_values_468" formatted="false">"Show original values"</string>
+    <string name="ui_heart_rate_source_470" formatted="false">"Heart rate (source)"</string>
+    <string name="ui_hide_original_values_471" formatted="false">"Hide original values"</string>
+    <string name="ui_calories_estimated_from_power_472" formatted="false">"Calories estimated from power"</string>
+    <string name="ui_calories_from_the_bike_energy_counter_473" formatted="false">"Calories from the bike energy counter"</string>
+    <string name="ui_workout_comparison_474" formatted="false">"WORKOUT COMPARISON"</string>
+    <string name="ui_similar_workouts_475" formatted="false">"Similar workouts"</string>
+    <string name="ui_compare_workouts_with_similar_duration_and_resistance_476" formatted="false">"Compare workouts with similar duration and resistance."</string>
+    <string name="ui_resistance_478" formatted="false">"Resistance "</string>
+    <string name="ui_comparison_criteria_479" formatted="false">"Comparison criteria"</string>
+    <string name="ui_cadence_comparison_480" formatted="false">"Cadence comparison"</string>
+    <string name="ui_for_a_trend_481" formatted="false">"For a trend"</string>
+    <string name="ui_no_trend_yet_482" formatted="false">"No trend yet"</string>
+    <string name="ui_matching_workouts_483" formatted="false">"Matching workouts"</string>
+    <string name="ui_interpretation_484" formatted="false">"Interpretation"</string>
+    <string name="ui_intensity_unclassified_492" formatted="false">"Intensity unclassified"</string>
+    <string name="ui_relatively_lower_493" formatted="false">"Relatively lower"</string>
+    <string name="ui_mid_range_494" formatted="false">"Mid-range"</string>
+    <string name="ui_relatively_higher_495" formatted="false">"Relatively higher"</string>
+    <string name="ui_this_workout_has_no_average_resistance_value_comparing__496" formatted="false">"This workout has no average resistance value. Comparing resistance and duration is not yet possible."</string>
+    <string name="ui_comparison_uses_workouts_lasting_at_least_10_minutes_497" formatted="false">"Comparison uses workouts lasting at least 10 minutes."</string>
+    <string name="ui_resistance_1f_1_duration_0f_min_20_same_data_source_kno_498" formatted="false">"Resistance %.1f ± 1 · Duration %.0f min ± 20 %%\nSame data source / known bike assignment\n%d matching workouts including the reference\n\n"</string>
+    <string name="ui_avg_cadence_earliest_d_1f_rpm_latest_d_1f_rpm_change_1f_499" formatted="false">"Avg. cadence\nEarliest %d: %.1f rpm\nLatest %d: %.1f rpm\nChange: %+.1f %%\n\n"</string>
+    <string name="ui_a_trend_requires_at_least_6_matching_dated_workouts_wit_500" formatted="false">"A trend requires at least 6 matching, dated workouts with cadence data.\n\n"</string>
+    <string name="ui_higher_cadence_under_similar_conditions_is_a_performanc_501" formatted="false">"Higher cadence under similar conditions is a performance indicator, not proof of improved fitness. Import averages do not include pauses or intervals.\n"</string>
+    <string name="ui_mybodytone_does_not_identify_the_bike_reliably_comparis_502" formatted="false">"MyBodytone does not identify the bike reliably. Comparison assumes the same bike and unchanged resistance levels.\n"</string>
+    <string name="ui_matching_workouts_newest_first_503" formatted="false">"\nMatching workouts (newest first):\n"</string>
+    <string name="ui_s_0f_min_resistance_1f_s_rpm_504" formatted="false">"%s · %.0f min · Resistance %.1f · %s rpm\n"</string>
+    <string name="ui_additional_matching_workouts_are_included_in_the_trend_505" formatted="false">"Additional matching workouts are included in the trend."</string>
+    <string name="ui_bridge_disconnected_506" formatted="false">"Bridge\nDisconnected"</string>
+    <string name="ui_bike_disconnected_507" formatted="false">"Bike\nDisconnected"</string>
+    <string name="ui_garmin_disconnected_508" formatted="false">"Garmin\nDisconnected"</string>
+    <string name="ui_preparing_connection_509" formatted="false">"Preparing connection"</string>
+    <string name="ui_power_510" formatted="false">"POWER"</string>
+    <string name="ui_live_heart_rate_not_connected_yet_512" formatted="false">"Live heart rate: not connected yet"</string>
+    <string name="ui_cadence_513" formatted="false">"Cadence"</string>
+    <string name="ui_speed_515" formatted="false">"Speed"</string>
+    <string name="ui_time_518" formatted="false">"Time"</string>
+    <string name="ui_resistance_520" formatted="false">"Resistance"</string>
+    <string name="ui_finish_workout_523" formatted="false">"Finish workout"</string>
+    <string name="ui_settings_524" formatted="false">"Settings"</string>
+    <string name="ui_color_scheme_system_525" formatted="false">"Color scheme · System"</string>
+    <string name="ui_load_wi_fi_status_526" formatted="false">"Load Wi-Fi status"</string>
+    <string name="ui_workout_527" formatted="false">"Workout"</string>
+    <string name="ui_history_528" formatted="false">"History"</string>
+</resources>

@@ -1,30 +1,36 @@
 # PedalBridge
 
-<img src="branding/pedalbridge-icon.png" width="160" alt="PedalBridge Icon">
+<img src="branding/pedalbridge-icon.png" width="160" alt="PedalBridge icon">
 
-PedalBridge verbindet ein Bodytone SMB1 V3 Spinning-Bike über einen ESP32 mit einer Garmin-Uhr und einem optionalen Android-Display. Das Smartphone ist zum Aufzeichnen eines Trainings nicht erforderlich.
+PedalBridge connects a Bodytone SMB1 V3 indoor bike to a Garmin watch through an ESP32, with an optional Android display. Recording a workout does not require your phone.
 
-- **PedalBridge 0.14.1**: ESP32-Firmware unter [`firmware/`](firmware).
-- **PedalBridge Display 0.9.2**: Android-App unter [`android/`](android).
+- **PedalBridge 0.15.0**: ESP32 firmware in [`firmware/`](firmware).
+- **PedalBridge Display 0.10.0**: Android companion app in [`android/`](android).
 
 ```text
 Bike -- BLE FTMS --> ESP32 -- BLE CPS/CSC --> Garmin
                       |
                  Bluetooth LE
                       |
-               PedalBridge Android <-- Live-Puls von der Fenix
+               Android app <-- live heart rate from Fenix
 ```
 
-Die App zeigt Leistung, Kadenz, Geschwindigkeit, Distanz, Kalorien, Widerstandsstufe und optional den Puls. Sie bietet Training, Verlauf und Einstellungen als Tabs, dunkles und helles Design, Querformat, Wischgesten sowie ein Diagramm mit Datumsachse, Zoom und Verschieben.
+The app displays power, cadence, speed, distance, calories, resistance and optional live heart rate. Training, History and Settings tabs support dark/light themes, landscape orientation and swipe navigation. The progress chart uses dates, pinch zoom and panning.
 
-Die Bridge zeichnet Trainings ohne Smartphone auf. Zusammenfassungen bleiben auf dem ESP; Sekundenwerte werden nach bestätigtem Transfer in das Smartphone-Archiv freigegeben. Bei Platzbedarf entfernt die Bridge die ältesten abgeschlossenen Sekundenaufzeichnungen. Die App speichert synchronisierte Trainings dauerhaft lokal und übernimmt MyBodytone-Importdateien in den gemeinsamen Verlauf.
+The bridge records independently. Workout summaries stay on the ESP; per-second recordings are released after a verified transfer to the phone archive. When space runs low, the oldest completed recordings are removed first. The app keeps synchronized workouts locally and combines MyBodytone imports with recorded workouts in one timeline.
 
-**Grenzen:** Mit der Fenix 8 Sapphire funktioniert die Leistungsübertragung. Geschwindigkeit, Distanz und Erkennung als Smart-Trainer sind weiterhin experimentell. Das Bike liefert seine Wattwerte; die Bridge ist kein kalibrierter Leistungsmesser. Kalorien sind, wenn kein gültiger Bike-Wert vorliegt, eine Schätzung aus Leistung mit angenommener 24 % Effizienz. Garmin kann anders rechnen. Live-Puls erfordert „Herzfrequenz senden“ auf der Uhr und die Auswahl des Pulssensors in der App.
+## Language
+
+Both interfaces support **English and German**. English is the default. In the app, use **Settings → Appearance → Language**. On the ESP setup page, use the **Language** selector. Each preference is saved independently. Changing language does not restart Bluetooth connections or modify stored training data. Dates and numeric formatting follow the app language; original imported values remain unchanged.
 
 ## Installation
 
-Siehe [Einrichtung und Builds](docs/SETUP.md), [Bluetooth-Protokoll](docs/PROTOCOL.md), [Datenspeicherung](docs/DATA.md) und [Änderungen](docs/CHANGELOG.md).
+See [setup and builds](docs/SETUP.md), [Bluetooth protocol](docs/PROTOCOL.md), [storage and privacy](docs/DATA.md), and [changelog](docs/CHANGELOG.md). Download the APK and firmware from [Releases](https://github.com/wischm0b/PedalBridge/releases).
 
-Android benötigt Android 12 oder neuer. Die Bridge wurde für einen klassischen ESP32 D1 Mini mit CP2104 und USB-C entwickelt. Die Anwendung behält `de.smb1display` und die bisherigen BLE-UUIDs. Die App erkennt auch `SMB1 Bridge` und `SMB1 Trainer`.
+Android 12 or later is required. The firmware targets a classic ESP32 D1 Mini with CP2104 and USB-C. Package ID `de.smb1display`, archive identities and BLE UUIDs stay compatible with existing installations. The app also recognizes the older sensor names `SMB1 Bridge` and `SMB1 Trainer`.
 
-GPL-3.0 gemäß [LICENSE](LICENSE). Hinweise zu Abhängigkeiten und Branding stehen in [THIRD_PARTY.md](THIRD_PARTY.md). Dieses Projekt ist unabhängig von Garmin und Bodytone.
+## Limitations
+
+Power transmission works with the Fenix 8 Sapphire. Garmin speed, distance and Smart Trainer discovery remain experimental. Bike power values are forwarded; the bridge is not a calibrated power meter. When bike energy readings are unavailable, calories are estimated from power assuming 24% efficiency; Garmin may calculate a different estimate. Live heart rate requires **Broadcast Heart Rate** on the watch and selecting its sensor in the app. Heart rate is currently live only and is not saved in the workout archive.
+
+Licensed under GPL-3.0; see [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY.md). This project is independent of Garmin and Bodytone.

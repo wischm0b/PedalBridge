@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class) @Config(sdk=35,qualifiers="w412dp-h892dp-port-xxhdpi")
 public class HeartRateInsightsTest {
-    @Before public void reset(){RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().clear().commit();}
+    @Before public void reset(){RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().clear().commit();RuntimeEnvironment.getApplication().getSharedPreferences("display",0).edit().putString("language","de").commit();I18n.init(RuntimeEnvironment.getApplication());}
     @Test public void heartRateFormatsContactAndTruncatedPackets(){
         assertEquals(142,HeartRateClient.decode(new byte[]{0,(byte)142}));
         assertEquals(260,HeartRateClient.decode(new byte[]{1,4,1}));

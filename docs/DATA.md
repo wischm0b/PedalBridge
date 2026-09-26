@@ -1,13 +1,13 @@
-# Daten und Archiv
+# Storage and privacy
 
-Der ESP speichert Geräte, Zusammenfassungen und optional Sekundenwerte in LittleFS. Die Anzahl möglicher Sekundenaufzeichnungen hängt von Dauer und freiem Flash ab. Die App zeigt Speicherbelegung und Konfigurationsoptionen an.
+The ESP stores devices, summaries and optional per-second recordings in LittleFS. Recording capacity depends on duration and free flash. The app shows storage usage and configuration options.
 
-Ein Training beginnt erst mit Bewegung. Nach manuellem Abschluss muss das Bike zunächst stillstehen, bevor Bewegung ein neues Training eröffnet. Automatischer Abschluss erfolgt nach dem eingestellten Stillstandsintervall.
+A session starts only when movement is detected. After manually finishing, the bike must first become stationary before movement starts another session. Automatic completion follows the configured inactivity interval.
 
-Nach geprüftem Transfer und Bestätigung durch die App können Sekundenwerte auf dem ESP gelöscht werden. Alte abgeschlossene Sekundenaufzeichnungen werden bei Speicherbedarf zuerst entfernt. Zusammenfassungen und auf dem Handy gespeicherte Daten bleiben unabhängig davon erhalten. Grenzen des Zusammenfassungsarchivs sind im Firmware-Code festgelegt.
+The ESP may release per-second data after verified transfer and confirmation from the app. Under storage pressure, the oldest completed recordings are released first. Summaries and recordings already saved on the phone remain independent. Summary limits are defined in the firmware.
 
-Die App speichert alles lokal in SQLite, benötigt keine Internetberechtigung und bietet einen ZIP-Export. Ein Verlust des Handys ohne Backup kann synchronisierte Sekundenwerte unwiederbringlich verlieren. Regelmäßig das Archiv exportieren.
+The app uses local SQLite storage, requires no Internet permission and offers ZIP backup. Losing a phone without a backup can permanently lose recordings already released by the ESP. Export the archive regularly.
 
-MyBodytone-Dateien werden über die Importfunktion übernommen. Das Format heißt aus Kompatibilitätsgründen weiterhin `smb1-training-import`, Version 1. Stabile Quell-IDs vermeiden doppelte Einträge. Normalisierte Werte und Originalangaben bleiben erhalten. Unbekannte Zeitzonen werden nicht geraten.
+MyBodytone files are imported through the app. For compatibility, the format remains `smb1-training-import`, version 1. Stable source IDs prevent duplicates. Normalized values and original source fields are preserved. Unknown time zones are not guessed. Language changes affect display labels and formatting, never the imported source values or stored records.
 
-Dieses Repository enthält ausschließlich synthetische Testdaten. Persönliche Importe, Geräte-Backups, Diagnoseprotokolle und Signierschlüssel gehören nicht in Git. Die persönliche `bodytone_seed.h` zur einmaligen Bereitstellung ist nicht enthalten.
+This repository contains only synthetic test data. Personal imports, device backups, diagnostic logs and signing keys must not be committed. The personal one-time provisioning file `bodytone_seed.h` is intentionally excluded.

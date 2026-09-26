@@ -1,17 +1,26 @@
-# Änderungen
+# Changelog
 
-## App 0.9.2
+## Display 0.10.0 / Firmware 0.15.0
 
-- Oberen Verbindungspfeil im App-Icon verlängert und Abstände zum Pedal angeglichen.
-- Gleichmäßiger Kreisradius, Strichstärke und Pfeilspitzen.
-- Firmware bleibt bei 0.14.1.
+- Complete English and German app UI, including dialogs, charts, accessibility labels, errors and Bluetooth status.
+- Persistent app language selection under Settings → Appearance.
+- Language switching preserves BLE clients, live readings, synchronization and unsaved device settings.
+- Locale-aware dates and numbers; imported source data remains unchanged.
+- English and German ESP setup page and diagnostics with a persistent web language selector.
+- Repository documentation and GitHub release descriptions translated to English.
 
-## App 0.9.1 / Bridge 0.14.1
+## Display 0.9.2
 
-- Gemeinsames Branding PedalBridge und PedalBridge Display.
-- Adaptives Android-Icon und monochrome Variante für thematische Icons.
-- Neue BLE-Namen; Android erkennt auch die bisherigen Namen.
-- Paketkennung, Datenbank, Archivformat und UUIDs bleiben kompatibel.
-- Gemeinsames Repository, Build-Anleitungen und synthetische Import-Testdaten.
+- Extended the upper connection arrow in the app icon and balanced spacing around the pedal.
+- Refined circular radius, stroke weight and arrowheads.
+- Firmware remained at 0.14.1.
 
-Die bisherigen Funktionen einschließlich Archiv, Puls, Gesten, Diagramm und überarbeiteter Dialoge sind enthalten. Die Leistungs- und Kalorienberechnung wird durch dieses Update nicht verändert.
+## Display 0.9.1 / Firmware 0.14.1
+
+- Shared PedalBridge and PedalBridge Display branding.
+- Adaptive Android icon and monochrome variant for themed launcher icons.
+- New BLE names, retaining recognition of earlier names.
+- Existing package ID, database, archive format and UUID compatibility retained.
+- Combined repository, build instructions and synthetic import fixtures.
+
+Power and calorie calculations are unchanged by these branding and language updates.
