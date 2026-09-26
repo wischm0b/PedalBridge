@@ -1,0 +1,32 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'de.smb1display'
+    compileSdk { version = release(36) { minorApiLevel = 1 } }
+
+    defaultConfig {
+        applicationId 'de.smb1display'
+        minSdk 31
+        targetSdk 35
+        versionCode 15
+        versionName '0.9.1'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    testOptions { unitTests.includeAndroidResources = true }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+dependencies {
+ testImplementation "junit:junit:4.13.2"
+ testImplementation "org.robolectric:robolectric:4.14.1"
+}

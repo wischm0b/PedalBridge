@@ -1,0 +1,12 @@
+<resources>
+<color name="background">#F4F6F8</color>
+<color name="surface">#FFFFFF</color>
+<color name="surface_alt">#EAF0F5</color>
+<color name="ink">#172630</color>
+<color name="muted">#697D8A</color>
+<color name="line">#DFE7ED</color>
+<color name="accent">#156F73</color>
+<color name="accent_ink">#FFFFFF</color>
+<color name="good">#21836B</color>
+<color name="bad">#B84949</color>
+<color name="waiting">#C59A42</color><color name="hero_ink">#F2FBFF</color><color name="intensity_low">#527EBC</color><color name="intensity_mid">#267E91</color><color name="intensity_high">#13745F</color></resources>
