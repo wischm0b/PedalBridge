@@ -1,0 +1,11 @@
+<resources>
+  <string name="settings_app">App &amp; Archiv</string>
+  <string name="settings_app_hint">Darstellung und Trainings auf diesem Smartphone</string>
+  <string name="settings_garmin">Garmin &amp; Herzfrequenz</string>
+  <string name="settings_garmin_hint">Live-Puls direkt von deiner Uhr empfangen</string>
+  <string name="settings_bridge">PedalBridge</string>
+  <string name="settings_bridge_hint">Verbindung, Aufzeichnung und Gerätespeicher</string>
+  <string name="settings_archive">Archiv auf diesem Smartphone</string>
+  <string name="settings_bridge_save">Bridge-Einstellungen speichern</string>
+  <string name="settings_device_storage">Speicher auf der Bridge</string>
+</resources>

@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@color/background" android:fitsSystemWindows="true">
-  <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+  <FrameLayout android:id="@+id/tabContent" android:clipChildren="true" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
     <LinearLayout android:id="@+id/livePage" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="20dp">
-      <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/ui_your_workout_426" android:textColor="@color/ink" android:textSize="28sp" android:fontFamily="sans-serif-medium" />
+      <TextView android:id="@+id/workoutTitle" style="@style/PageTitle" android:layout_width="match_parent" android:text="@string/ui_your_workout_426" />
       <LinearLayout android:layout_width="match_parent" android:layout_height="66dp" android:orientation="horizontal" android:layout_marginTop="10dp" android:layout_marginBottom="12dp">
         <TextView android:id="@+id/bridgeLink" android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:drawableTop="@drawable/status_bridge" android:drawablePadding="3dp" android:paddingVertical="4dp" android:text="@string/ui_bridge_disconnected_506" android:textSize="11sp" android:textColor="@color/muted" />
         <TextView android:id="@+id/bikeLink" android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center" android:drawableTop="@drawable/status_bike" android:drawablePadding="3dp" android:paddingVertical="4dp" android:text="@string/ui_bike_disconnected_507" android:textSize="11sp" android:textColor="@color/muted" />
@@ -51,7 +51,7 @@
     </ScrollView>
     <ScrollView android:id="@+id/espPage" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone">
       <LinearLayout android:id="@+id/espSection" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/ui_settings_524" android:textSize="28sp" android:textColor="@color/ink" android:fontFamily="sans-serif-medium" />
+        <TextView android:id="@+id/settingsTitle" style="@style/PageTitle" android:layout_width="match_parent" android:text="@string/ui_settings_524" />
         <TextView android:id="@+id/themeButton" android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical" android:paddingHorizontal="18dp" android:background="@drawable/metric_background" android:text="@string/ui_color_scheme_system_525" android:textColor="@color/ink" android:textSize="15sp" android:clickable="true" android:focusable="true" />
         <Button android:id="@+id/connectButton" android:layout_width="match_parent" android:layout_height="52dp" android:text="@string/ui_connect_bridge_62" android:textAllCaps="false" android:textColor="@color/ink" android:background="@drawable/metric_background" />
         <Button android:id="@+id/wifiButton" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:text="@string/ui_load_wi_fi_status_526" android:textAllCaps="false" android:textColor="@color/ink" android:background="@drawable/metric_background" />

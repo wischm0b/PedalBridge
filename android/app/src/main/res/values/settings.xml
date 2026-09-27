@@ -1,0 +1,11 @@
+<resources>
+  <string name="settings_app">App &amp; archive</string>
+  <string name="settings_app_hint">Appearance and workouts stored on this phone</string>
+  <string name="settings_garmin">Garmin &amp; heart rate</string>
+  <string name="settings_garmin_hint">Receive live heart rate directly from your watch</string>
+  <string name="settings_bridge">PedalBridge</string>
+  <string name="settings_bridge_hint">Connection, recording and device storage</string>
+  <string name="settings_archive">Archive on this phone</string>
+  <string name="settings_bridge_save">Save bridge settings</string>
+  <string name="settings_device_storage">Storage on the bridge</string>
+</resources>

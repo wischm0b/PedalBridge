@@ -1,5 +1,14 @@
 # Changelog
 
+## Display 0.10.1
+
+- Directional slide transitions for swipes and tab taps, with clean cancellation during rapid navigation and configuration changes.
+- Consistent heading size, baseline and alignment across all three tabs in portrait and landscape.
+- Settings grouped into App & archive, Garmin & heart rate, and PedalBridge, with distinct category icons and device-scoped saving.
+- Settings navigation now uses a symmetric cog icon.
+- Existing Bluetooth connections, live readings and pending device settings are preserved. System animation preferences are respected.
+- Firmware remains at 0.15.0.
+
 ## Display 0.10.0 / Firmware 0.15.0
 
 - Complete English and German app UI, including dialogs, charts, accessibility labels, errors and Bluetooth status.

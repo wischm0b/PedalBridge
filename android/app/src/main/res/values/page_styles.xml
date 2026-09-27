@@ -1,0 +1,12 @@
+<resources>
+ <style name="PageTitle">
+  <item name="android:layout_height">48dp</item>
+  <item name="android:minHeight">48dp</item>
+  <item name="android:gravity">start|center_vertical</item>
+  <item name="android:textSize">28sp</item>
+  <item name="android:textColor">@color/ink</item>
+  <item name="android:fontFamily">sans-serif-medium</item>
+  <item name="android:includeFontPadding">false</item>
+  <item name="android:accessibilityHeading">true</item>
+ </style>
+</resources>

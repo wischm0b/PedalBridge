@@ -77,7 +77,7 @@ public class LocalizationTest {
         for(String mode:new String[]{"night","notnight"}) {
             RuntimeEnvironment.setQualifiers("w412dp-h892dp-port-"+mode+"-xxhdpi");
             try(var c=Robolectric.buildActivity(MainActivity.class).setup().visible()) {
-                MainActivity a=c.get();a.findViewById(R.id.tabEsp).performClick();capture(a.getWindow().getDecorView(),"english-settings-"+mode,1236,2676);
+                MainActivity a=c.get();a.findViewById(R.id.tabEsp).performClick();Shadows.shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofMillis(320));capture(a.getWindow().getDecorView(),"english-settings-"+mode,1236,2676);
                 ReflectionHelpers.callInstanceMethod(a,"chooseLanguage");AppDialog dialog=ReflectionHelpers.getField(a,"activeDialog");assertTrue(dialog.isShowing());dialog.dismiss();
                 a.findViewById(R.id.tabLive).performClick();RuntimeEnvironment.setQualifiers("w892dp-h412dp-land-"+mode+"-xxhdpi");a.onConfigurationChanged(new Configuration(a.getResources().getConfiguration()));
                 capture(a.getWindow().getDecorView(),"english-training-landscape-"+mode,2676,1236);

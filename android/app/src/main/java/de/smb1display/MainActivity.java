@@ -156,6 +156,7 @@ public final class MainActivity extends Activity {
     }
 
     private void inflateUi() {
+        finishTabTransition();
         Context uiContext=I18n.localize(this);
         setContentView(android.view.LayoutInflater.from(this).cloneInContext(uiContext).inflate(R.layout.activity_main,(android.view.ViewGroup)findViewById(android.R.id.content),false));
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -549,65 +550,94 @@ public final class MainActivity extends Activity {
     private void moveSettingRow(TextView row,LinearLayout parent){
         ((android.view.ViewGroup)row.getParent()).removeView(row);row.setTextSize(14);row.setGravity(android.view.Gravity.CENTER_VERTICAL | android.view.Gravity.START);row.setPadding(dp(12),0,dp(12),0);row.setBackgroundResource(android.R.drawable.list_selector_background);parent.addView(row,new LinearLayout.LayoutParams(-1,dp(52)));
     }
+    private LinearLayout settingsCategory(LinearLayout parent,int title,int subtitle,int icon) {
+        LinearLayout category=new LinearLayout(this);category.setTag(title);category.setOrientation(LinearLayout.VERTICAL);category.setPadding(dp(16),dp(16),dp(16),dp(16));category.setBackgroundResource(R.drawable.metric_background);
+        LinearLayout.LayoutParams outer=new LinearLayout.LayoutParams(-1,-2);outer.topMargin=dp(18);parent.addView(category,outer);
+        LinearLayout heading=new LinearLayout(this);heading.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        android.widget.ImageView symbol=new android.widget.ImageView(this);symbol.setImageResource(icon);symbol.setImageTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.accent)));heading.addView(symbol,new LinearLayout.LayoutParams(dp(28),dp(28)));
+        LinearLayout text=new LinearLayout(this);text.setOrientation(LinearLayout.VERTICAL);text.setPadding(dp(12),0,0,0);
+        TextView name=historyText(I18n.t(title),20);name.setTypeface(android.graphics.Typeface.create("sans-serif-medium",android.graphics.Typeface.NORMAL));name.setAccessibilityHeading(true);name.setPadding(0,0,0,0);text.addView(name);
+        TextView hint=historyText(I18n.t(subtitle),12);hint.setTextColor(getColor(R.color.muted));hint.setPadding(0,dp(4),0,0);text.addView(hint);heading.addView(text,new LinearLayout.LayoutParams(0,-2,1));category.addView(heading);
+        return category;
+    }
     private LinearLayout settingsGroup(LinearLayout parent,String title) {
-        TextView label=historyText(title,13);label.setTextColor(getColor(R.color.muted));LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.topMargin=dp(16);parent.addView(label,lp);
-        LinearLayout group=new LinearLayout(this);group.setOrientation(LinearLayout.VERTICAL);group.setPadding(dp(8),dp(8),dp(8),dp(8));group.setBackgroundResource(R.drawable.metric_background);parent.addView(group);return group;
+        LinearLayout group=new LinearLayout(this);group.setOrientation(LinearLayout.VERTICAL);group.setPadding(dp(12),dp(12),dp(12),dp(12));group.setBackgroundResource(R.drawable.settings_group);
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.topMargin=dp(12);parent.addView(group,lp);
+        TextView label=historyText(title,14);label.setTypeface(android.graphics.Typeface.create("sans-serif-medium",android.graphics.Typeface.NORMAL));label.setAccessibilityHeading(true);label.setPadding(dp(12),dp(4),dp(12),dp(8));group.addView(label);return group;
     }
     private void setupHistory() {
         LinearLayout section=findViewById(R.id.historySection),settings=findViewById(R.id.espSection);
         LinearLayout heading=new LinearLayout(this);heading.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        TextView headingText=historyText(I18n.t(R.string.ui_your_activities_129),26);headingText.setPadding(0,dp(8),0,dp(8));heading.addView(headingText,new LinearLayout.LayoutParams(0,-2,1));
+        TextView headingText=new TextView(this);headingText.setId(R.id.activitiesTitle);headingText.setText(I18n.t(R.string.ui_your_activities_129));headingText.setTextAppearance(R.style.PageTitle);headingText.setGravity(android.view.Gravity.START | android.view.Gravity.CENTER_VERTICAL);headingText.setIncludeFontPadding(false);headingText.setAccessibilityHeading(true);heading.addView(headingText,new LinearLayout.LayoutParams(0,dp(48),1));
         historyRefresh=new android.widget.ImageButton(this);historyRefresh.setImageResource(R.drawable.nav_sync);historyRefresh.setImageTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.accent)));historyRefresh.setContentDescription(I18n.t(R.string.ui_synchronize_history_130));historyRefresh.setTooltipText(I18n.t(R.string.ui_synchronize_131));historyRefresh.setBackgroundResource(android.R.drawable.list_selector_background);heading.addView(historyRefresh,new LinearLayout.LayoutParams(dp(48),dp(48)));historyRefresh.setOnClickListener(v->refreshHistory());section.addView(heading);
-        LinearLayout appearance=settingsGroup(settings,I18n.t(R.string.ui_appearance_132));moveSettingRow(themeButton,appearance);
+        LinearLayout app=settingsCategory(settings,R.string.settings_app,R.string.settings_app_hint,R.drawable.nav_phone);
+        LinearLayout appearance=settingsGroup(app,I18n.t(R.string.ui_appearance_132));moveSettingRow(themeButton,appearance);
         action(appearance,I18n.t(R.string.language_setting,"de".equals(I18n.locale().getLanguage())?"Deutsch":"English"),this::chooseLanguage);
-        LinearLayout links=settingsGroup(settings,I18n.t(R.string.ui_connection_133));moveSettingRow(connectButton,links);moveSettingRow(wifiButton,links);
-        historyStatus=historyText(I18n.t(R.string.ui_saved_workouts_134),13);historyStatus.setTextColor(getColor(R.color.muted));section.addView(historyStatus);
-        historyDevice=new Spinner(this);historyDevice.setVisibility(View.GONE);section.addView(historyDevice);
-        historyCards=new LinearLayout(this);historyCards.setOrientation(LinearLayout.VERTICAL);section.addView(historyCards);
-        historyCacheKey=getSharedPreferences("display",MODE_PRIVATE).getString("lastHistory","history");loadHistoryCache();
-        LinearLayout connection=settingsGroup(settings,I18n.t(R.string.ui_bridge_status_135));
-        settingsState=historyText(I18n.t(R.string.ui_connect_the_bridge_to_load_device_settings_136),13);connection.addView(settingsState);
-        statusRefresh=action(connection,I18n.t(R.string.ui_refresh_status_137),()->{if(connected && !historyLoading && !controlBusy){if(managementCharacteristic==null){cacheRefreshAttempted=false;recoverServices();}else readManagement();}});
-        LinearLayout pulse=settingsGroup(settings,I18n.t(R.string.ui_live_heart_rate_fenix_bluetooth_sensor_138));
+        LinearLayout archive=settingsGroup(app,I18n.t(R.string.settings_archive));
+        action(archive,I18n.t(R.string.ui_back_up_archive_as_zip_162),()->startActivityForResult(new Intent(Intent.ACTION_CREATE_DOCUMENT).setType("application/zip").addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE,I18n.t(R.string.ui_pedalbridge_archive_zip_164)),81));
+        action(archive,I18n.t(R.string.ui_import_workout_file_165),()->startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*"),82));
+        LinearLayout watch=settingsCategory(settings,R.string.settings_garmin,R.string.settings_garmin_hint,R.drawable.status_watch);
+        LinearLayout pulse=settingsGroup(watch,I18n.t(R.string.ui_live_heart_rate_fenix_bluetooth_sensor_138));
         heartRateStatus=historyText(I18n.t(R.string.ui_no_heart_rate_sensor_selected_yet_10),13);pulse.addView(heartRateStatus);
         pulse.addView(historyText(I18n.t(R.string.ui_on_your_fenix_settings_health_wellness_wrist_heart_rate_139),12));
         action(pulse,I18n.t(R.string.ui_find_heart_rate_sensor_140),this::chooseHeartRateSensor);
         action(pulse,I18n.t(R.string.ui_reconnect_heart_rate_sensor_141),()->heartRateClient.reconnectSaved());
         action(pulse,I18n.t(R.string.ui_disconnect_heart_rate_sensor_142),()->heartRateClient.disconnect());
         pulse.addView(historyText(I18n.t(R.string.ui_direct_to_the_app_heart_rate_is_live_only_and_is_not_ye_143),12));
-        LinearLayout recording=settingsGroup(settings,I18n.t(R.string.ui_recording_144));
+        LinearLayout bridge=settingsCategory(settings,R.string.settings_bridge,R.string.settings_bridge_hint,R.drawable.status_bridge);
+        historyStatus=historyText(I18n.t(R.string.ui_saved_workouts_134),13);historyStatus.setTextColor(getColor(R.color.muted));section.addView(historyStatus);
+        historyDevice=new Spinner(this);historyDevice.setVisibility(View.GONE);section.addView(historyDevice);
+        historyCards=new LinearLayout(this);historyCards.setOrientation(LinearLayout.VERTICAL);section.addView(historyCards);
+        historyCacheKey=getSharedPreferences("display",MODE_PRIVATE).getString("lastHistory","history");loadHistoryCache();
+        LinearLayout connection=settingsGroup(bridge,I18n.t(R.string.ui_bridge_status_135));
+        settingsState=historyText(I18n.t(R.string.ui_connect_the_bridge_to_load_device_settings_136),13);connection.addView(settingsState);
+        moveSettingRow(connectButton,connection);moveSettingRow(wifiButton,connection);
+        statusRefresh=action(connection,I18n.t(R.string.ui_refresh_status_137),()->{if(connected && !historyLoading && !controlBusy){if(managementCharacteristic==null){cacheRefreshAttempted=false;recoverServices();}else readManagement();}});
+        LinearLayout recording=settingsGroup(bridge,I18n.t(R.string.ui_recording_144));
         recordingControl=new Switch(this);recordingControl.setText(I18n.t(R.string.ui_save_per_second_data_145));recordingControl.setTextColor(getColor(R.color.ink));recordingControl.setPadding(dp(12),dp(10),dp(12),dp(10));recording.addView(recordingControl);
         recording.addView(historyText(I18n.t(R.string.ui_automatically_finish_workout_after_146),13));
         String[] minutes=new String[30];for(int i=0;i<30;i++)minutes[i]=(i+1)+I18n.t(R.string.ui_minutes_without_movement_147);
         idleControl=AppDialog.spinner(this,minutes);recording.addView(idleControl);
-        LinearLayout led=settingsGroup(settings,I18n.t(R.string.ui_status_light_148));
+        LinearLayout led=settingsGroup(bridge,I18n.t(R.string.ui_status_light_148));
         brightnessLabel=historyText(I18n.t(R.string.ui_brightness_149),14);led.addView(brightnessLabel);
         brightnessControl=new SeekBar(this);brightnessControl.setMax(100);led.addView(brightnessControl);
         patternControl=AppDialog.spinner(this,new String[]{I18n.t(R.string.ui_connection_status_150),I18n.t(R.string.ui_short_pulse_151),I18n.t(R.string.ui_double_pulse_152),I18n.t(R.string.ui_off_153)});led.addView(patternControl);
         led.addView(historyText(I18n.t(R.string.ui_single_color_led_the_separate_power_indicator_is_unaffe_154),12));
-        saveSettings=action(settings,I18n.t(R.string.ui_save_changes_155),this::saveEspSettings);saveSettings.setBackgroundResource(R.drawable.primary_button);saveSettings.setTextColor(getColor(R.color.accent_ink));saveSettings.setGravity(android.view.Gravity.CENTER);
+        saveSettings=action(bridge,I18n.t(R.string.settings_bridge_save),this::saveEspSettings);saveSettings.setBackgroundResource(R.drawable.primary_button);saveSettings.setTextColor(getColor(R.color.accent_ink));saveSettings.setGravity(android.view.Gravity.CENTER);
         recordingControl.setOnCheckedChangeListener((v,checked)->{if(!settingUi){settingsDirty=true;updateSettingsAvailability();}});
         brightnessControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar b,int value,boolean user){brightnessLabel.setText(I18n.t(R.string.ui_brightness_156)+value+" %");if(user){settingsDirty=true;updateSettingsAvailability();}}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});
         AdapterView.OnItemSelectedListener changed=new AdapterView.OnItemSelectedListener(){public void onItemSelected(AdapterView<?> p,View v,int i,long id){if(!settingUi && espStorage!=null){settingsDirty= settingsDirty || patternControl.getSelectedItemPosition()!=espStorage.optInt("ledPattern") || idleControl.getSelectedItemPosition()!=espStorage.optInt("idleMinutes",5)-1;}}public void onNothingSelected(AdapterView<?> p){}};
         patternControl.setOnItemSelectedListener(changed);idleControl.setOnItemSelectedListener(changed);
-        LinearLayout memory=settingsGroup(settings,I18n.t(R.string.ui_storage_backup_160));storageInfo=historyText(I18n.t(R.string.ui_storage_details_load_after_connecting_161),13);memory.addView(storageInfo);importInfo=historyText("",12);memory.addView(importInfo);
-        action(memory,I18n.t(R.string.ui_back_up_archive_as_zip_162),()->startActivityForResult(new Intent(Intent.ACTION_CREATE_DOCUMENT).setType("application/zip").addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE,I18n.t(R.string.ui_pedalbridge_archive_zip_164)),81));
-        action(memory,I18n.t(R.string.ui_import_workout_file_165),()->startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*"),82));
-        settings.addView(historyText("PedalBridge Display · Version 0.10.0",12));
+        LinearLayout memory=settingsGroup(bridge,I18n.t(R.string.settings_device_storage));storageInfo=historyText(I18n.t(R.string.ui_storage_details_load_after_connecting_161),13);memory.addView(storageInfo);importInfo=historyText("",12);memory.addView(importInfo);
+        settings.addView(historyText("PedalBridge Display · Version 0.10.1",12));
         updateSettingsAvailability();
     }
     private void setupTabs() {
         int[] tabs={R.id.tabLive,R.id.tabHistory,R.id.tabEsp};for(int i=0;i<3;i++){final int index=i;findViewById(tabs[i]).setOnClickListener(v->selectTab(index));}
-        selectTab(getSharedPreferences("display",MODE_PRIVATE).getInt("tab",0));
+        selectTab(getSharedPreferences("display",MODE_PRIVATE).getInt("tab",0),false);
     }
     private int selectedTab;
     private float swipeX,swipeY;
     private boolean swipeEligible,swipeCaptured;
 
-    private void selectTab(int index) {
-        index=Math.max(0,Math.min(2,index));selectedTab=index;
+    private android.animation.AnimatorSet tabTransition;
+    private void finishTabTransition() {
+        if(tabTransition!=null){tabTransition.removeAllListeners();tabTransition.cancel();tabTransition=null;}
+        int[] pages={R.id.livePage,R.id.historyPage,R.id.espPage};
+        for(int i=0;i<pages.length;i++){View page=findViewById(pages[i]);if(page!=null){page.setTranslationX(0);page.setVisibility(i==selectedTab?View.VISIBLE:View.GONE);}}
+    }
+    private void selectTab(int index) {selectTab(index,true);}
+    private void selectTab(int index,boolean animate) {
+        index=Math.max(0,Math.min(2,index));int previous=selectedTab;finishTabTransition();selectedTab=index;
         int[] pages={R.id.livePage,R.id.historyPage,R.id.espPage},tabs={R.id.tabLive,R.id.tabHistory,R.id.tabEsp};
-        for(int i=0;i<3;i++){findViewById(pages[i]).setVisibility(i==index?View.VISIBLE:View.GONE);TextView label=findViewById(tabs[i]);int color=getColor(i==index?R.color.accent:R.color.muted);label.setTextColor(color);label.setTypeface(null,i==index?android.graphics.Typeface.BOLD:android.graphics.Typeface.NORMAL);label.setSelected(i==index);for(android.graphics.drawable.Drawable d:label.getCompoundDrawables())if(d!=null)d.mutate().setTint(color);}
+        for(int i=0;i<3;i++){TextView label=findViewById(tabs[i]);int color=getColor(i==index?R.color.accent:R.color.muted);label.setTextColor(color);label.setTypeface(null,i==index?android.graphics.Typeface.BOLD:android.graphics.Typeface.NORMAL);label.setSelected(i==index);for(android.graphics.drawable.Drawable d:label.getCompoundDrawables())if(d!=null)d.mutate().setTint(color);}
+        View incoming=findViewById(pages[index]),outgoing=findViewById(pages[previous]);int width=findViewById(R.id.tabContent).getWidth();
+        if(animate && previous!=index && width>0 && android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            float offset=index>previous?width:-width;incoming.setTranslationX(offset);incoming.setVisibility(View.VISIBLE);
+            tabTransition=new android.animation.AnimatorSet();tabTransition.playTogether(android.animation.ObjectAnimator.ofFloat(outgoing,View.TRANSLATION_X,0,-offset),android.animation.ObjectAnimator.ofFloat(incoming,View.TRANSLATION_X,offset,0));
+            tabTransition.setDuration(260);tabTransition.setInterpolator(new android.view.animation.DecelerateInterpolator(1.5f));
+            tabTransition.addListener(new android.animation.AnimatorListenerAdapter(){@Override public void onAnimationEnd(android.animation.Animator animation){outgoing.setVisibility(View.GONE);outgoing.setTranslationX(0);incoming.setTranslationX(0);tabTransition=null;}});tabTransition.start();
+        } else finishTabTransition();
         getSharedPreferences("display",MODE_PRIVATE).edit().putInt("tab",index).apply();
     }
     private boolean ownsHorizontalGesture(View view,float x,float y) {
@@ -621,6 +651,7 @@ public final class MainActivity extends Activity {
     @Override public boolean dispatchTouchEvent(android.view.MotionEvent event) {
         int action=event.getActionMasked();
         if(action==android.view.MotionEvent.ACTION_DOWN){
+            finishTabTransition();
             swipeX=event.getRawX();swipeY=event.getRawY();swipeCaptured=false;
             int page=selectedTab==0?R.id.livePage:selectedTab==1?R.id.historyPage:R.id.espPage;
             View content=findViewById(page);android.graphics.Rect bounds=new android.graphics.Rect();
