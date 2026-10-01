@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name" translatable="false">PedalBridge Display</string>
+    <string name="session_timeline">Workout timeline</string>
+    <string name="session_metric">Timeline metric</string>
+    <string name="session_power">Power</string>
+    <string name="session_cadence">Cadence</string>
+    <string name="session_speed">Speed</string>
+    <string name="session_resistance">Resistance level</string>
+    <string name="session_calories">Calories · cumulative</string>
+    <string name="session_distance">Distance · cumulative</string>
+    <string name="session_gestures">Pinch to zoom · drag to pan · tap for a reading. Time includes pauses.</string>
+    <string name="session_full">Show full workout</string>
+    <string name="session_gaps">This recording is incomplete or interrupted. Gaps are shown without joining the missing samples.</string>
+    <string name="session_no_signal">No measurement</string>
+    <string name="session_loading">Loading saved measurements…</string>
+    <string name="session_import_summary">This import contains summary values, without per-second measurements.</string>
+    <string name="session_sync_required">No recording saved on this phone. Refresh history while connected to the bridge to transfer available recordings. Older or deleted recordings cannot be reconstructed from summary values.</string>
+    <string name="session_empty">This recording contains no samples.</string>
+    <string name="session_invalid">The saved recording cannot be read. It remains stored and can be included in an archive export.</string>
 </resources>

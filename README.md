@@ -5,11 +5,11 @@
 PedalBridge connects compatible Bluetooth FTMS indoor bikes to a Garmin watch through an ESP32, with an optional Android display. Recording a workout does not require your phone. The Bodytone SMB1 V3 is the currently tested bike.
 
 - **PedalBridge 0.15.1**: ESP32 firmware in [`firmware/`](firmware).
-- **PedalBridge Display 0.10.1**: Android companion app in [`android/`](android).
+- **PedalBridge Display 0.10.2**: Android companion app in [`android/`](android).
 
 ![PedalBridge architecture: FTMS indoor bike to ESP32 bridge to Garmin watch, with an optional Android app for live metrics, history sync and settings, and heart rate broadcast from the watch to the app.](docs/images/pedalbridge-architecture-v2.png)
 
-The app displays power, cadence, speed, distance, calories, resistance and optional live heart rate. Training, History and Settings tabs support dark/light themes, landscape orientation and animated swipe navigation. The progress chart uses dates, pinch zoom and panning.
+The app displays power, cadence, speed, distance, calories, resistance and optional live heart rate. Training, History and Settings tabs support dark/light themes, landscape orientation and animated swipe navigation. The progress chart uses dates, pinch zoom and panning. Open a workout in History to explore its per-second timeline with metric selection, pinch zoom, panning and tap-to-inspect readings. Saved recordings work offline.
 
 The bridge records independently. Workout summaries stay on the ESP; per-second recordings are released after a verified transfer to the phone archive. When space runs low, the oldest completed recordings are removed first. The app keeps synchronized workouts locally and combines MyBodytone imports with recorded workouts in one timeline.
 

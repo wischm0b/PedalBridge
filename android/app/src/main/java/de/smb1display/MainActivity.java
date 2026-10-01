@@ -992,7 +992,7 @@ public final class MainActivity extends Activity {
             JSONArray devices=historyJson==null?null:historyJson.optJSONArray("devices");
             if(devices!=null)for(int i=0;i<devices.length();i++){JSONObject d=devices.getJSONObject(i),t=d.getJSONObject("stats");km+=t.optDouble("km",0);kcal+=t.optDouble("kcal",0);seconds+=(long)t.optDouble("seconds",0);count+=d.optLong("sessions",0);}
             java.util.ArrayList<JSONObject> all=new java.util.ArrayList<>();
-            for(int i=0;i<nativeRows.length();i++){JSONObject row=nativeRows.getJSONObject(i);long epoch=row.optLong("started");String order=epoch==0?"":java.time.Instant.ofEpochSecond(epoch).atZone(java.time.ZoneId.systemDefault()).toLocalDateTime().toString();all.add(new JSONObject().put("row",row).put("imported",false).put("order",order).put("deviceKey",historyJson.optString("archiveId",historyCacheKey)+":"+row.optInt("device",-1)));}
+            for(int i=0;i<nativeRows.length();i++){JSONObject row=nativeRows.getJSONObject(i);long epoch=row.optLong("started");String order=epoch==0?"":java.time.Instant.ofEpochSecond(epoch).atZone(java.time.ZoneId.systemDefault()).toLocalDateTime().toString();all.add(new JSONObject().put("row",row).put("imported",false).put("order",order).put("archive",historyJson.optString("archiveId",historyCacheKey)).put("deviceKey",historyJson.optString("archiveId",historyCacheKey)+":"+row.optInt("device",-1)));}
             for(int i=0;i<imports.length();i++){JSONObject row=imports.getJSONObject(i);km+=row.optDouble("distance_km",0);kcal+=row.optDouble("calories_kcal",0);seconds+=row.optLong("duration_seconds",0);all.add(new JSONObject().put("row",row).put("imported",true).put("order",row.optString("datetime_local")));}
             all.sort((x,y)->y.optString("order").compareTo(x.optString("order")));
             TextView totals=historyText(String.format(I18n.locale(),I18n.t(R.string.ui_d_workouts_1f_km_s_0f_kcal_in_total_292),count,km,formatDuration(seconds),kcal),20);totals.setBackgroundResource(R.drawable.hero_background);totals.setTextColor(getColor(R.color.hero_ink));totals.setPadding(dp(20),dp(20),dp(20),dp(20));LinearLayout.LayoutParams totalLp=new LinearLayout.LayoutParams(-1,-2);totalLp.topMargin=dp(14);historyCards.addView(totals,totalLp);
@@ -1015,9 +1015,27 @@ public final class MainActivity extends Activity {
                     dialog.action(I18n.t(R.string.ui_close_302),false,dialog::dismiss);
                     dialog.action(I18n.t(R.string.ui_compare_303),true,()->{dialog.dismiss();showSimilarTrainings(item,all);});
                     showDialog(dialog);
+                    if(!imported)loadSessionChart(dialog,item);
                 });
             }
         }catch(Exception e){historyStatus.setText(I18n.t(R.string.ui_could_not_load_history_304)+e.getMessage());}
+    }
+
+    private void loadSessionChart(AppDialog dialog,JSONObject item) {
+        String archive=item.optString("archive");long id=item.optJSONObject("row").optLong("id");
+        archiveIo.execute(()->{
+            TrainingRecording recording=null;int message=R.string.session_sync_required;
+            try {byte[] bytes=archiveDb.loadRaw(archive,id);if(bytes!=null){recording=new TrainingRecording(bytes,id);if(recording.seconds.length==0)message=R.string.session_empty;}}
+            catch(Exception e){message=R.string.session_invalid;}
+            TrainingRecording result=recording;int notice=message;
+            handler.post(()->{
+                if(!dialog.isShowing())return;
+                LinearLayout group=dialog.body.findViewWithTag("sessionTimeline");
+                while(group.getChildCount()>1)group.removeViewAt(1);
+                if(result!=null && result.seconds.length>0)group.addView(new SessionChart(this,result));
+                else group.addView(AppDialog.text(this,I18n.t(notice),13,R.color.muted));
+            });
+        });
     }
 
     private void showDialog(AppDialog dialog){if(activeDialog!=null && activeDialog.isShowing())activeDialog.dismiss();activeDialog=dialog;dialog.show();}

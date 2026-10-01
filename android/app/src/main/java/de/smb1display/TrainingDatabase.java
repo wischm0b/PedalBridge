@@ -98,6 +98,11 @@ final class TrainingDatabase extends SQLiteOpenHelper {
             result.put("sessions",sessions); return result;
         }
     }
+    byte[] loadRaw(String archive,long id) {
+        try(Cursor c=getReadableDatabase().rawQuery("SELECT bytes FROM raw WHERE archive=? AND id=?",new String[]{archive,Long.toString(id)})) {
+            return c.moveToFirst()?c.getBlob(0):null;
+        }
+    }
     static long checksum(byte[] bytes) {
         long h=2166136261L; for(byte b:bytes) h=((h^(b&255))*16777619L)&0xffffffffL; return h;
     }
@@ -121,8 +126,8 @@ final class TrainingDatabase extends SQLiteOpenHelper {
             zip.putNextEntry(new ZipEntry("README.txt"));
             zip.write(("SMB1 archive backup v1. Summary JSON retains ESP values and device metadata.\n"
                     +"Raw .bin: 16-byte header (magic uint32=0x31574152, session uint32, start UTC uint32, record bytes uint16=24, flags uint16).\n"
-                    +"24-byte records: elapsed ms uint32, power int16 W, cadence uint16 x10 rpm, speed uint16 x100 km/h, bike kcal uint16, distance uint32 m, kcal uint32 x1000, flags uint16, reserved uint16. All little-endian.\n"
-                    +"Record flags: fresh=1, power=2, cadence=4, speed=8, bike energy=16, estimated calories=32. Header flags: gaps=1, interrupted=2.\n")
+                    +"24-byte records: elapsed ms uint32, power int16 W, cadence uint16 x10 rpm, speed uint16 x100 km/h, bike kcal uint16, distance uint32 m, kcal uint32 x1000, flags uint16, resistance int16 (formerly reserved). All little-endian.\n"
+                    +"Record flags: fresh=1, power=2, cadence=4, speed=8, bike energy=16, estimated calories=32, resistance=64. Header flags: gaps=1, interrupted=2.\n")
                     .getBytes(StandardCharsets.UTF_8)); zip.closeEntry();
             try(Cursor c=db.rawQuery("SELECT checksum,json FROM import_documents",null)) {
                 while(c.moveToNext()) {zip.putNextEntry(new ZipEntry("imports/mybodytone-"+c.getLong(0)+".json"));zip.write(c.getString(1).getBytes(StandardCharsets.UTF_8));zip.closeEntry();}

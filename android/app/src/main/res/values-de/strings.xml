@@ -1,0 +1,18 @@
+<resources>    <string name="session_timeline">Trainingsverlauf</string>
+    <string name="session_metric">Messwert im Trainingsverlauf</string>
+    <string name="session_power">Leistung</string>
+    <string name="session_cadence">Kadenz</string>
+    <string name="session_speed">Geschwindigkeit</string>
+    <string name="session_resistance">Stufe</string>
+    <string name="session_calories">Kalorien Â· kumulativ</string>
+    <string name="session_distance">Distanz Â· kumulativ</string>
+    <string name="session_gestures">Mit zwei Fingern zoomen Â· verschieben Â· Messwert antippen. Zeit inklusive Pausen.</string>
+    <string name="session_full">Ganzes Training anzeigen</string>
+    <string name="session_gaps">Diese Aufzeichnung ist unvollstÃ¤ndig oder unterbrochen. Fehlende Abschnitte werden nicht verbunden.</string>
+    <string name="session_no_signal">Kein Messwert</string>
+    <string name="session_loading">Gespeicherte Messwerte werden geladenâ€¦</string>
+    <string name="session_import_summary">Dieser Import enthÃ¤lt Zusammenfassungen, keine sekÃ¼ndlichen Messwerte.</string>
+    <string name="session_sync_required">Auf diesem Smartphone ist keine Zeitreihe gespeichert. Aktualisiere den Verlauf bei verbundener Bridge, um verfÃ¼gbare Aufzeichnungen zu Ã¼bertragen. Ã„ltere oder gelÃ¶schte Zeitreihen lassen sich nicht aus Zusammenfassungen rekonstruieren.</string>
+    <string name="session_empty">Diese Aufzeichnung enthÃ¤lt keine Messwerte.</string>
+    <string name="session_invalid">Die gespeicherte Aufzeichnung kann nicht gelesen werden. Sie bleibt gespeichert und kann im Archiv exportiert werden.</string>
+</resources>

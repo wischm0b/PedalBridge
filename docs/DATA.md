@@ -12,6 +12,12 @@ MyBodytone files are imported through the app. For compatibility, the format rem
 
 This repository contains only synthetic test data. Personal imports, device backups, diagnostic logs and signing keys must not be committed. The personal one-time provisioning file `bodytone_seed.h` is intentionally excluded.
 
+## Workout timelines
+
+Display 0.10.2 reads the existing RAW1 recordings from the phone's archive when a workout is opened. Refresh History while connected to the bridge to transfer any recordings still available there. Once saved on the phone, timelines work without a connection. Summary-only imports and recordings already evicted before transfer cannot be reconstructed.
+
+The horizontal axis is elapsed session time, including pauses. Power, cadence, speed and resistance use their measurement-presence and freshness flags; unavailable measurements are gaps, never substituted with zero. Calories and distance are the recorded cumulative session totals. Lines break across missing samples or sampling gaps greater than 2.5 seconds. Values remain unsmoothed. Heart rate is currently live-only and is not part of this ESP recording format. Header flags identify incomplete or interrupted recordings.
+
 ## Calories
 
 The bridge accumulates differences from the bike's cumulative energy counter only across observed riding intervals. Counter resets establish a new baseline; implausible jumps are rejected rather than added to the workout. Valid delayed counter updates remain supported. A separate energy freshness timestamp prevents unrelated FTMS packets from indefinitely refreshing an old calorie value.

@@ -8,8 +8,8 @@ android {
         applicationId 'de.smb1display'
         minSdk 31
         targetSdk 35
-        versionCode 18
-        versionName '0.10.1'
+        versionCode 19
+        versionName '0.10.2'
     }
 
     compileOptions {

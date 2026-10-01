@@ -1,5 +1,14 @@
 # Changelog
 
+## Display 0.10.2
+
+- Show saved per-second recordings inside workout details, with elapsed time on the horizontal axis.
+- Select power, cadence, speed, resistance level, cumulative calories or cumulative distance; zoom, pan and tap to inspect readings.
+- Load recordings locally in the background. No bridge connection or new firmware is needed for already synced recordings.
+- Show missing measurements and recording gaps without inventing data. Explain when only a summary, an empty recording or an unreadable file is available.
+- Support both languages, themes and screen orientations. Correct the exported RAW1 format description for resistance fields.
+- Firmware remains at 0.15.1. Existing archives and recordings are preserved.
+
 ## Firmware 0.15.1
 
 - Prevent a transient bike energy reset (for example 300 → 0 → 300) from doubling workout calories.
