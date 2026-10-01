@@ -85,7 +85,7 @@ struct BikeMetrics {
   float speedKph = 0.0f;
   float cadenceRpm = 0.0f;
   int16_t powerWatts = 0, resistanceLevel=0;
-  uint32_t resistanceAtMs=0;
+  uint32_t resistanceAtMs=0, energyAtMs=0;
   uint16_t totalEnergyKcal = 0;
   uint32_t receivedAtMs = 0;
   bool hasSpeed = false;
@@ -368,7 +368,7 @@ String buildConfigPage() {
             "<form method='post' action='/wifi-off'><button type='submit'>WLAN ausschalten &amp; Betrieb starten</button></form></div>"
             "<p class='muted'>Hotspot: "),F("</tbody></table></section><div class='actions'><button class='secondary' onclick='location.reload()'>Refresh device list</button><form method='post' action='/session-reset'><button class='secondary' type='submit'>Reset workout</button></form><form method='post' action='/wifi-off'><button type='submit'>Turn off Wi-Fi &amp; continue riding</button></form></div><p class='muted'>Hotspot: "));
   page += CONFIG_AP_NAME;
-  page += webText(F(" · Seite: 192.168.4.1 · Firmware 0.15.0</p>"
+  page += webText(F(" · Seite: 192.168.4.1 · Firmware 0.15.1</p>"
             "<script>function state(v){return '<i class=\"dot '+(v?'ok':'bad')+'\"></i>'+(v?'verbunden':'nicht verbunden')}"
             "function clock(v){const m=Math.floor(v/60),q=v%60;return String(m).padStart(2,'0')+':'+String(q).padStart(2,'0')}"
             "async function poll(){try{const r=await fetch('/api/status',{cache:'no-store'}),s=await r.json();"
@@ -376,7 +376,7 @@ String buildConfigPage() {
             "links.innerHTML='Bike '+(s.bike?'✓':'–')+' · Garmin '+(s.garmin?'✓':'–')+' · Phone '+(s.phone?'✓':'–')+'<br>P:'+(s.garminSubscribed?'ja':'nein')+' · S:'+(s.speedSubscribed?'ja':'nein')+' · FTMS:'+(s.ftmsSubscribed?'ja':'nein');"
             "detail.textContent='Bike: '+s.configured+' | Signal: '+(s.rssi===-127?'–':s.rssi+' dBm')+' | FTMS-Pakete: '+s.ftmsPackets+' | Garmin Leistung: '+s.garminPackets+' | Garmin Speed: '+s.speedPackets+' | '+s.control;"
             "}catch(e){detail.textContent='Diagnoseverbindung zum ESP32 unterbrochen.'}}poll();setInterval(poll,1000)</script>"
-            "</main></body></html>"),F(" · Page: 192.168.4.1 · Firmware 0.15.0</p><script>function state(v){return '<i class=\"dot '+(v?'ok':'bad')+'\"></i>'+(v?'connected':'disconnected')}function clock(v){const m=Math.floor(v/60),q=v%60;return String(m).padStart(2,'0')+':'+String(q).padStart(2,'0')}async function poll(){try{const r=await fetch('/api/status',{cache:'no-store'}),s=await r.json();power.textContent=s.power+' W';cadence.textContent=s.cadence.toFixed(1)+' rpm';speed.textContent=s.speed.toFixed(1)+' km/h';distance.textContent=s.distance.toFixed(2)+' km';duration.textContent=clock(s.duration);calories.textContent=s.calories.toFixed(0)+' kcal';links.innerHTML='Bike '+(s.bike?'✓':'–')+' · Garmin '+(s.garmin?'✓':'–')+' · Phone '+(s.phone?'✓':'–')+'<br>P:'+(s.garminSubscribed?'yes':'no')+' · S:'+(s.speedSubscribed?'yes':'no')+' · FTMS:'+(s.ftmsSubscribed?'yes':'no');detail.textContent='Bike: '+s.configured+' | Signal: '+(s.rssi===-127?'–':s.rssi+' dBm')+' | FTMS packets: '+s.ftmsPackets+' | Garmin Power: '+s.garminPackets+' | Garmin speed: '+s.speedPackets+' | '+s.control;}catch(e){detail.textContent='Diagnostic connection to the ESP32 interrupted.'}}poll();setInterval(poll,1000)</script></main></body></html>"));
+            "</main></body></html>"),F(" · Page: 192.168.4.1 · Firmware 0.15.1</p><script>function state(v){return '<i class=\"dot '+(v?'ok':'bad')+'\"></i>'+(v?'connected':'disconnected')}function clock(v){const m=Math.floor(v/60),q=v%60;return String(m).padStart(2,'0')+':'+String(q).padStart(2,'0')}async function poll(){try{const r=await fetch('/api/status',{cache:'no-store'}),s=await r.json();power.textContent=s.power+' W';cadence.textContent=s.cadence.toFixed(1)+' rpm';speed.textContent=s.speed.toFixed(1)+' km/h';distance.textContent=s.distance.toFixed(2)+' km';duration.textContent=clock(s.duration);calories.textContent=s.calories.toFixed(0)+' kcal';links.innerHTML='Bike '+(s.bike?'✓':'–')+' · Garmin '+(s.garmin?'✓':'–')+' · Phone '+(s.phone?'✓':'–')+'<br>P:'+(s.garminSubscribed?'yes':'no')+' · S:'+(s.speedSubscribed?'yes':'no')+' · FTMS:'+(s.ftmsSubscribed?'yes':'no');detail.textContent='Bike: '+s.configured+' | Signal: '+(s.rssi===-127?'–':s.rssi+' dBm')+' | FTMS packets: '+s.ftmsPackets+' | Garmin Power: '+s.garminPackets+' | Garmin speed: '+s.speedPackets+' | '+s.control;}catch(e){detail.textContent='Diagnostic connection to the ESP32 interrupted.'}}poll();setInterval(poll,1000)</script></main></body></html>"));
   String languageForm="<form method='post' action='/language' class='actions'><label for='language'>";
   languageForm += gWebEnglish ? "Language" : "Sprache";
   languageForm += "</label><select id='language' name='language' onchange='this.form.submit()'><option value='en'";
@@ -562,7 +562,7 @@ void parseIndoorBikeData(const uint8_t* data, size_t length) {
       malformed = true;
     } else {
       update.totalEnergyKcal = readLe16(data + offset - 5);
-      update.hasEnergy = true;
+      update.hasEnergy = update.totalEnergyKcal != UINT16_MAX;
     }
   }
   if (!malformed && (flags & (1U << 9))) malformed = !consume(offset, 1, length);  // heart rate
@@ -590,9 +590,10 @@ void parseIndoorBikeData(const uint8_t* data, size_t length) {
     gMetrics.powerWatts = update.powerWatts;
     gMetrics.hasPower = true;
   }
-  if (update.hasEnergy) {
+  if (flags & (1U << 8)) {
     gMetrics.totalEnergyKcal = update.totalEnergyKcal;
-    gMetrics.hasEnergy = true;
+    gMetrics.hasEnergy = update.hasEnergy;
+    gMetrics.energyAtMs = update.receivedAtMs;
   }
   if(flags & (1U<<5)){gMetrics.resistanceLevel=update.resistanceLevel;gMetrics.hasResistance=update.hasResistance;gMetrics.resistanceAtMs=update.receivedAtMs;}
   gMetrics.receivedAtMs = update.receivedAtMs;
@@ -1206,7 +1207,7 @@ void createGarminPowerSensor() {
   deviceInfo->createCharacteristic(kModelNumberUuid, NIMBLE_PROPERTY::READ)
       ->setValue("PedalBridge-FTMS-CPS-Bridge");
   deviceInfo->createCharacteristic(kFirmwareRevisionUuid, NIMBLE_PROPERTY::READ)
-      ->setValue("0.15.0");
+      ->setValue("0.15.1");
   deviceInfo->start();
 
   NimBLEAdvertising* advertising = NimBLEDevice::getAdvertising();
@@ -1260,7 +1261,8 @@ void publishPowerMeasurement(uint32_t nowMs) {
   historySample.fresh = fresh && gBikeConnected;
   historySample.power = power; historySample.cadence = cadence; historySample.speed = speed;
   historySample.hasPower = metrics.hasPower; historySample.hasCadence = metrics.hasCadence;
-  historySample.hasSpeed = metrics.hasSpeed; historySample.hasEnergy = metrics.hasEnergy;
+  historySample.hasSpeed = metrics.hasSpeed;
+  historySample.hasEnergy = fresh && metrics.hasEnergy && nowMs-metrics.energyAtMs<=BIKE_DATA_TIMEOUT_MS;
   historySample.energy = metrics.totalEnergyKcal;
   const bool resistanceFresh=fresh && metrics.hasResistance && nowMs-metrics.resistanceAtMs<=BIKE_DATA_TIMEOUT_MS;
   historySample.hasResistance=resistanceFresh;historySample.resistance=metrics.resistanceLevel;
@@ -1484,7 +1486,7 @@ void setup() {
   Serial.begin(115200);
   delay(500);
   Serial.println();
-  Serial.println("PedalBridge FTMS -> Garmin Cycling Power Bridge 0.15.0");
+  Serial.println("PedalBridge FTMS -> Garmin Cycling Power Bridge 0.15.1");
 #if defined(HISTORY_SELF_TEST) || defined(SESSION_SELF_TEST)
   Serial.println(historySelfTest() ? "HISTORY SELF TEST PASS" : "HISTORY SELF TEST FAIL");
 #endif
@@ -1497,7 +1499,18 @@ void setup() {
     const uint8_t truncated[]={0x65,0,172,0,99};parseIndoorBikeData(truncated,sizeof(truncated));
     ok=ok && gMetrics.resistanceLevel==23;
     const uint8_t missing[]={0x21,0,0xff,0x7f};parseIndoorBikeData(missing,sizeof(missing));ok=ok && !gMetrics.hasResistance;
-    gMetrics=saved;Serial.println(ok?"FTMS RESISTANCE TEST PASS":"FTMS RESISTANCE TEST FAIL");
+    Serial.println(ok?"FTMS RESISTANCE TEST PASS":"FTMS RESISTANCE TEST FAIL");
+    const uint8_t energy[]={0x01,0x01,0x2c,0x01,0,0,0};parseIndoorBikeData(energy,sizeof(energy));
+    bool energyOk=gMetrics.hasEnergy && gMetrics.totalEnergyKcal==300;
+    const uint32_t energyAt=gMetrics.energyAtMs;
+    const uint8_t split[]={0x01,0};parseIndoorBikeData(split,sizeof(split));
+    energyOk=energyOk && gMetrics.hasEnergy && gMetrics.totalEnergyKcal==300 && gMetrics.energyAtMs==energyAt;
+    const uint8_t badEnergy[]={0x01,0x01,99};parseIndoorBikeData(badEnergy,sizeof(badEnergy));
+    energyOk=energyOk && gMetrics.hasEnergy && gMetrics.totalEnergyKcal==300 && gMetrics.energyAtMs==energyAt;
+    const uint8_t unavailable[]={0x01,0x01,0xff,0xff,0,0,0};parseIndoorBikeData(unavailable,sizeof(unavailable));
+    energyOk=energyOk && !gMetrics.hasEnergy;
+    parseIndoorBikeData(energy,sizeof(energy));energyOk=energyOk && gMetrics.hasEnergy && gMetrics.totalEnergyKcal==300;
+    gMetrics=saved;Serial.println(energyOk?"FTMS ENERGY TEST PASS":"FTMS ENERGY TEST FAIL");
   }
 #endif
   gPreferences.begin("smb1bridge", false);

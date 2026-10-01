@@ -78,7 +78,7 @@ class Tracker {
     state.next = (state.next+1)%SessionLimit;
     state.count = std::min<unsigned>(SessionLimit,state.count+1);
     state.active = false; dirty = true;
-    previousMoving = false; energyValid = false;
+    previousMoving = false; energyValid = false; energyBudgetKcal = 0;
   }
   void setTime(uint32_t epoch, uint32_t now) {
     clockEpoch = epoch; clockMs = now; clockRemainder = 0;
@@ -108,7 +108,7 @@ class Tracker {
     if (moving && !state.active && !waitForStop && deviceIndex >= 0) {
       state.current = Session{}; state.current.device = deviceIndex;
       state.current.id = state.nextId++; state.current.started = clockEpoch;
-      state.active = true; ageMs = 0; previousMoving = false; energyValid = false;
+      state.active = true; ageMs = 0; previousMoving = false; energyValid = false; energyBudgetKcal = 0;
     } else if (state.active) ageMs += dt;
     if (!state.active) return;
     if (moving) {
@@ -131,17 +131,34 @@ class Tracker {
         s.km += sample.speed*interval/3600000.0;
         s.maxSpeed = std::max(s.maxSpeed,sample.speed);
       }
-      if (sample.hasEnergy) {
-        if (energyValid && sample.energy>=lastEnergy) s.kcal += sample.energy-lastEnergy;
+      if (sample.hasEnergy && sample.energy!=UINT16_MAX) {
+        // Only compare counters across observed riding intervals. A reset, pause,
+        // reconnect or blocked loop must never re-add earlier bike calories.
+        if (!energyValid || interval==0 || sample.energy<lastEnergy) {
+          energyBudgetKcal = 0;
+        } else {
+          // A deliberately generous signal-validity bound, not a calorie model.
+          // Retain the budget while the integer counter is unchanged so that
+          // legitimately batched updates are allowed (plus quantization slack).
+          const double rate=std::max(2.0,sample.hasPower ? sample.power/(4184.0*0.10) : 0.0);
+          energyBudgetKcal += rate*interval/1000.0;
+          if (sample.energy!=lastEnergy) {
+            const unsigned delta=sample.energy-lastEnergy;
+            if (delta<=energyBudgetKcal+2.0) s.kcal += delta;
+            // Rebase even rejected spikes; otherwise a rebound after a brief
+            // zero reading could repeatedly attempt to charge the old total.
+            energyBudgetKcal = 0;
+          }
+        }
         lastEnergy = sample.energy; energyValid = true;
       } else {
-        energyValid = false;
+        energyValid = false; energyBudgetKcal = 0;
         if (sample.hasPower) { s.kcal += sample.power*interval/(1000*4184.0*0.24); s.estimatedCalories = true; }
       }
       dirty = true;
     }
     previousMoving = moving;
-    if (!sample.fresh) energyValid = false;
+    if (!moving) { energyValid = false; energyBudgetKcal = 0; }
   }
  private:
   uint32_t lastTick = 0, lastMoving = 0, clockEpoch = 0, clockMs = 0, clockRemainder = 0;
@@ -150,5 +167,6 @@ class Tracker {
   bool waitForStop = false, stationary = false;
   uint32_t stationarySince = 0;
   uint16_t lastEnergy = 0;
+  double energyBudgetKcal = 0;
 };
 }

@@ -1,5 +1,14 @@
 # Changelog
 
+## Firmware 0.15.1
+
+- Prevent a transient bike energy reset (for example 300 → 0 → 300) from doubling workout calories.
+- Reject implausible counter increases using observed riding time, while allowing legitimate delayed integer-counter updates.
+- Rebase energy after pauses, disconnects and long blocked sampling intervals to avoid counting unobserved history.
+- Treat FTMS unavailable energy as missing data and use power fallback. Cached energy now has its own freshness timestamp.
+- Add executable production-model regressions to CI and parser checks to the FTMS self-test.
+- Archive formats and the existing 24% power-estimation assumption remain unchanged. Display 0.10.1 remains compatible.
+
 ## Display 0.10.1
 
 - Directional slide transitions for swipes and tab taps, with clean cancellation during rapid navigation and configuration changes.

@@ -25,5 +25,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Verify calorie accumulation regressions
+        run: |
+          g++ -std=c++17 -Wall -Wextra -Werror -I firmware/include firmware/tests/calorie_regression.cpp -o /tmp/pedalbridge-calorie-test
+          /tmp/pedalbridge-calorie-test
       - run: pip install platformio
       - run: pio run -d firmware -e esp32_d1_mini -e ftms_test -e session_test -e history_test
