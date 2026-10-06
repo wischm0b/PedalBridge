@@ -38,6 +38,9 @@ final class AppDialog extends Dialog {
     static void notice(Activity activity,String message){
         FrameLayout root=activity.findViewById(android.R.id.content);View previous=root.findViewWithTag("appNotice");if(previous!=null)root.removeView(previous);
         LinearLayout card=new LinearLayout(activity);card.setTag("appNotice");card.setGravity(Gravity.CENTER_VERTICAL);card.setPadding(dp(activity,16),dp(activity,12),dp(activity,8),dp(activity,12));card.setBackground(surface(activity,R.color.surface,20,true));card.setElevation(dp(activity,12));TextView text=text(activity,message,15,R.color.ink);card.addView(text,new LinearLayout.LayoutParams(0,-2,1));Button close=new Button(activity);close.setText("×");close.setTextSize(24);close.setTextColor(activity.getColor(R.color.muted));close.setContentDescription(I18n.t(R.string.ui_dismiss_message_4));close.setBackgroundColor(Color.TRANSPARENT);card.addView(close,new LinearLayout.LayoutParams(dp(activity,48),dp(activity,48)));close.setOnClickListener(v->root.removeView(card));
-        FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM);lp.setMargins(dp(activity,16),0,dp(activity,16),dp(activity,88));root.addView(card,lp);card.announceForAccessibility(message);card.postDelayed(()->root.removeView(card),6000);
+        // Keep transient feedback away from workout actions and bottom navigation.
+        WindowInsets insets=root.getRootWindowInsets();
+        int top=insets==null?0:insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout()).top;
+        FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(-1,-2,Gravity.TOP);lp.setMargins(dp(activity,16),top+dp(activity,12),dp(activity,16),0);root.addView(card,lp);card.announceForAccessibility(message);card.postDelayed(()->root.removeView(card),6000);
     }
 }

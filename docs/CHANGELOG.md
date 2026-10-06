@@ -1,5 +1,12 @@
 # Changelog
 
+## Display 0.10.3
+
+- Move transient banners to the top of the screen, clear of the Finish workout button and bottom navigation.
+- Respect status-bar and display-cutout insets. Existing dismiss, replacement and timeout behavior is retained.
+- Verify that workout feedback does not overlap the finish action in portrait and landscape.
+- Firmware remains at 0.15.1.
+
 ## Display 0.10.2
 
 - Show saved per-second recordings inside workout details, with elapsed time on the horizontal axis.
